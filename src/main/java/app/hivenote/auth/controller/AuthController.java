@@ -1,0 +1,92 @@
+package app.hivenote.auth.controller;
+
+import app.hivenote.account.AccountService;
+import app.hivenote.account.entity.AccountEntity;
+import app.hivenote.auth.AuthService;
+import app.hivenote.auth.dto.request.EmailPasswordLoginRequest;
+import app.hivenote.auth.dto.request.RegisterConfirmationRequest;
+import app.hivenote.auth.dto.request.UpdatePasswordRequest;
+import app.hivenote.auth.dto.response.MeResponse;
+import app.hivenote.auth.entity.AuthenticatedProfile;
+import app.hivenote.auth.mapper.AuthMapper;
+import app.hivenote.validation.ValidationService;
+import app.hivenote.validation.entity.ValidationType;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.constraints.Email;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.UUID;
+
+@Transactional
+@RestController
+@RequestMapping("/api/v1/public/auth")
+public class AuthController {
+    private static final Logger LOGGER = LoggerFactory.getLogger(AuthController.class);
+
+    private final AuthService authService;
+    private final AccountService accountService;
+
+    private final ValidationService validationService;
+
+    public AuthController(AuthService authService, AccountService accountService, ValidationService validationService) {
+        this.authService = authService;
+        this.accountService = accountService;
+        this.validationService = validationService;
+    }
+
+    @PostMapping("/login")
+    public void login(@RequestBody EmailPasswordLoginRequest request, HttpServletResponse response) {
+        LOGGER.info("Login request: email = [{}]", request.getEmail());
+        authService.login(request, response);
+    }
+
+    @PostMapping("/logoff")
+    public void logoff(HttpServletResponse response) {
+//    authService.logoff(response);
+    }
+
+    @PostMapping("/register")
+    public void register(@RequestBody EmailPasswordLoginRequest request, HttpServletResponse response) {
+//    LOGGER.info("Register request: email = [{}]", request.getEmail());
+//    authService.register(request, response, false);
+    }
+
+
+    @PutMapping("/register/confirm")
+    public void registerConfirmation(@RequestBody RegisterConfirmationRequest request, AuthenticatedProfile profile) {
+        LOGGER.info("Register confirmation request account id = [{}]", profile.getId());
+//    authService.confirmRegister(request, profile.getId());
+    }
+
+    @GetMapping(path = "/login/magic/send-email")
+    public void sendEmailConfirmation(@RequestParam @Email String email) {
+        LOGGER.info("Send magic link email request: email = [{}]", email);
+        String uuid = UUID.randomUUID().toString();
+//    authNotificationUtil.sendMagicLinkEmail(email, uuid, false, null);
+        validationService.create(ValidationType.MAGIC_UUID, uuid, email, null);
+    }
+
+
+    @PutMapping("/password/change")
+    public void changePassword(@RequestBody UpdatePasswordRequest request, AuthenticatedProfile profile) {
+        LOGGER.info("Change password request: account id = [{}]", profile.getId());
+//    authService.changePassword(request, profile.getId());
+    }
+
+    @GetMapping("/me")
+    public MeResponse getMe(AuthenticatedProfile profile) {
+        if (profile == null) {
+            return null;
+        }
+
+        AccountEntity account = accountService.findByIdOrNull(profile.getId());
+        if (account == null) {
+            return null;
+        }
+
+        return AuthMapper.toResponse(account);
+    }
+}

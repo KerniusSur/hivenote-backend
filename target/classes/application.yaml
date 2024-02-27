@@ -1,0 +1,28 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5433/hivenote-db
+    username: ${APP_DATABASE_USERNAME:postgres}
+    password: ${APP_DATABASE_PASSWORD:postgres}
+  flyway:
+    locations: classpath:db/migration/common,classpath:db/migration/dev
+  jpa:
+    hibernate:
+      ddl-auto: none
+    database: postgresql
+    properties:
+      hibernate:
+        generate_statistics: false # analysing queries
+        types:
+          print:
+            banner: false #Turn off Vlad Hybernate types banner
+    show-sql: false # analysing queries
+    open-in-view: false #Do not allow Spring to automagically fetch data from database
+management:
+  endpoints:
+    web:
+      base-path: /api/v1/public
+app:
+  BASE_URL: http://localhost:4000
+  jwt:
+    secret: ${JWT_SECRET:Am@z11nGS3eEcR4tBBDcbb}
+    expirationMs: 172800000 # 2 days

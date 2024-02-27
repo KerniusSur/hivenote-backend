@@ -1,0 +1,16 @@
+version: '3'
+
+services:
+  hivenote-db:
+    image: postgres:15
+    restart: always
+    container_name: hivenote-db
+    hostname: postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: hivenote-db
+    ports:
+      - '5433:5432'
+    volumes:
+      - .db:/var/lib/postgresql/
