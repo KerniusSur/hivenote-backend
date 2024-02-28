@@ -110,3 +110,18 @@ CREATE TABLE event
     FOREIGN KEY (account_id) REFERENCES account (id)
 );
 
+-- COMMENT TABLE
+CREATE TABLE comment
+(
+    id          uuid PRIMARY KEY,
+    body        text,
+    account_id  uuid,
+    note_id     uuid,
+    note_line   int,
+    parent_id   uuid,
+    is_resolved boolean,
+
+    FOREIGN KEY (account_id) REFERENCES account (id),
+    FOREIGN KEY (note_id) REFERENCES note (id),
+    FOREIGN KEY (parent_id) REFERENCES comment (id)
+);

@@ -3,9 +3,7 @@ package app.hivenote.notebook.entity;
 import app.hivenote.account.entity.AccountEntity;
 import app.hivenote.note.entity.NoteEntity;
 import jakarta.persistence.*;
-import java.util.Objects;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 @Entity
 @Table(name = "notebook")
@@ -16,6 +14,9 @@ public class NotebookEntity {
   private UUID id;
 
   private String name;
+
+  private Boolean isArchived;
+  private Boolean isDeleted;
 
   @ManyToOne
   @JoinColumn(name = "account_id", referencedColumnName = "id")
@@ -42,6 +43,24 @@ public class NotebookEntity {
     return this;
   }
 
+  public Boolean getIsArchived() {
+    return isArchived;
+  }
+
+  public NotebookEntity setIsArchived(Boolean isArchived) {
+    this.isArchived = isArchived;
+    return this;
+  }
+
+  public Boolean getIsDeleted() {
+    return isDeleted;
+  }
+
+  public NotebookEntity setIsDeleted(Boolean isDeleted) {
+    this.isDeleted = isDeleted;
+    return this;
+  }
+
   public AccountEntity getAccount() {
     return account;
   }
@@ -58,21 +77,5 @@ public class NotebookEntity {
   public NotebookEntity setNotes(Set<NoteEntity> notes) {
     this.notes = notes;
     return this;
-  }
-
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) return true;
-    if (o == null || getClass() != o.getClass()) return false;
-    NotebookEntity that = (NotebookEntity) o;
-    return getId().equals(that.getId())
-        && getName().equals(that.getName())
-        && getAccount().equals(that.getAccount())
-        && getNotes().equals(that.getNotes());
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(getId(), getName(), getAccount(), getNotes());
   }
 }

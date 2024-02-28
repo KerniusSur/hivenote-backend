@@ -2,6 +2,7 @@ package app.hivenote.component.entity;
 
 import app.hivenote.note.entity.NoteEntity;
 import jakarta.persistence.*;
+import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 import org.hibernate.annotations.JdbcTypeCode;
@@ -23,6 +24,9 @@ public class ComponentEntity {
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "parent_id", referencedColumnName = "id")
   private ComponentEntity parent;
+
+  @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL, orphanRemoval = true)
+  private List<ComponentEntity> children;
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "note_id", referencedColumnName = "id")
@@ -64,6 +68,15 @@ public class ComponentEntity {
     return this;
   }
 
+  public List<ComponentEntity> getChildren() {
+    return children;
+  }
+
+  public ComponentEntity setChildren(List<ComponentEntity> children) {
+    this.children = children;
+    return this;
+  }
+
   public NoteEntity getNote() {
     return note;
   }
@@ -82,11 +95,12 @@ public class ComponentEntity {
         && getType() == that.getType()
         && getProperties().equals(that.getProperties())
         && getParent().equals(that.getParent())
+        && getChildren().equals(that.getChildren())
         && getNote().equals(that.getNote());
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(getId(), getType(), getProperties(), getParent(), getNote());
+    return Objects.hash(getId(), getType(), getProperties(), getParent(), getChildren(), getNote());
   }
 }

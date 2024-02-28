@@ -1,5 +1,7 @@
 package app.hivenote.account.entity;
 
+import app.hivenote.comment.entity.CommentEntity;
+import app.hivenote.note.entity.NoteAccessEntity;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
@@ -32,6 +34,12 @@ public class AccountEntity {
 
   @OneToMany(cascade = CascadeType.ALL, mappedBy = "account", orphanRemoval = true)
   private List<AccountRoleEntity> roles = new ArrayList<>();
+
+  @OneToMany(cascade = CascadeType.ALL, mappedBy = "account", orphanRemoval = true)
+  private List<NoteAccessEntity> noteAccess = new ArrayList<>();
+
+  @OneToMany(cascade = CascadeType.ALL, mappedBy = "account", orphanRemoval = true)
+  private List<CommentEntity> comments;
 
   public UUID getId() {
     return id;
@@ -139,6 +147,24 @@ public class AccountEntity {
 
   public AccountEntity setRoles(List<AccountRoleEntity> roles) {
     this.roles = roles;
+    return this;
+  }
+
+  public List<NoteAccessEntity> getNoteAccess() {
+    return noteAccess;
+  }
+
+  public AccountEntity setNoteAccess(List<NoteAccessEntity> noteAccess) {
+    this.noteAccess = noteAccess;
+    return this;
+  }
+
+  public List<CommentEntity> getComments() {
+    return comments;
+  }
+
+  public AccountEntity setComments(List<CommentEntity> comments) {
+    this.comments = comments;
     return this;
   }
 }

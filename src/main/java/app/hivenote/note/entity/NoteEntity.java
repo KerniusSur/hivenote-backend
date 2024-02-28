@@ -1,10 +1,11 @@
 package app.hivenote.note.entity;
 
+import app.hivenote.comment.entity.CommentEntity;
 import app.hivenote.component.entity.ComponentEntity;
 import app.hivenote.notebook.entity.NotebookEntity;
 import jakarta.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.UUID;
 
 @Entity
@@ -29,6 +30,12 @@ public class NoteEntity {
 
   @OneToMany(mappedBy = "note", cascade = CascadeType.ALL, orphanRemoval = true)
   private List<ComponentEntity> components;
+
+  @OneToMany(mappedBy = "note", cascade = CascadeType.ALL, orphanRemoval = true)
+  private List<NoteAccessEntity> accountAccess = new ArrayList<>();
+
+  @OneToMany(mappedBy = "note", cascade = CascadeType.ALL, orphanRemoval = true)
+  private List<CommentEntity> comments;
 
   public UUID getId() {
     return id;
@@ -102,31 +109,21 @@ public class NoteEntity {
     return this;
   }
 
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) return true;
-    if (o == null || getClass() != o.getClass()) return false;
-    NoteEntity that = (NoteEntity) o;
-    return getId().equals(that.getId())
-        && getType() == that.getType()
-        && getTitle().equals(that.getTitle())
-        && getCoverUrl().equals(that.getCoverUrl())
-        && getIsArchived().equals(that.getIsArchived())
-        && getIsDeleted().equals(that.getIsDeleted())
-        && getNotebook().equals(that.getNotebook())
-        && getComponents().equals(that.getComponents());
+  public List<NoteAccessEntity> getAccountAccess() {
+    return accountAccess;
   }
 
-  @Override
-  public int hashCode() {
-    return Objects.hash(
-        getId(),
-        getType(),
-        getTitle(),
-        getCoverUrl(),
-        getIsArchived(),
-        getIsDeleted(),
-        getNotebook(),
-        getComponents());
+  public NoteEntity setAccountAccess(List<NoteAccessEntity> accountAccess) {
+    this.accountAccess = accountAccess;
+    return this;
+  }
+
+  public List<CommentEntity> getComments() {
+    return comments;
+  }
+
+  public NoteEntity setComments(List<CommentEntity> comments) {
+    this.comments = comments;
+    return this;
   }
 }
