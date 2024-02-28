@@ -44,23 +44,17 @@ public class AccountService {
     return repository.findAll(SpecificationUtil.sortByIdAsc());
   }
 
-  public AccountEntity findById(Long id) throws ApiException {
+  public AccountEntity findById(UUID id) throws ApiException {
     return repository
         .findById(id)
         .orElseThrow(() -> ApiException.notFound("err.account.dont.exist"));
   }
 
-  public List<AccountEntity> findAllClientsBySpecialist(Long id) {
-    return repository
-        .findCreatedClients(id)
-        .orElseThrow(() -> ApiException.notFound("err.account.dont.exist"));
-  }
-
-  public AccountEntity findByIdOrNull(Long id) {
+  public AccountEntity findByIdOrNull(UUID id) {
     return repository.findById(id).orElse(null);
   }
 
-  public Boolean existsById(Long id) {
+  public Boolean existsById(UUID id) {
     return repository.existsById(id);
   }
 
@@ -96,7 +90,7 @@ public class AccountService {
             .setLastLogin(ZonedDateTime.now())
             .setPassword(request.getPassword());
 
-    for (Long id : request.getRoles()) {
+    for (UUID id : request.getRoles()) {
       Optional<RoleEntity> role = roleService.findById(id);
       if (role.isEmpty()) {
         throw ApiException.bad("err.role.dont.exist");
@@ -130,7 +124,7 @@ public class AccountService {
             .setLastLogin(ZonedDateTime.now())
             .setPhoneNumber(request.getPhoneNumber());
 
-    for (Long id : request.getRoles()) {
+    for (UUID id : request.getRoles()) {
       Optional<RoleEntity> role = roleService.findById(id);
       if (role.isEmpty()) {
         throw ApiException.bad("err.role.dont.exist");
@@ -150,13 +144,13 @@ public class AccountService {
       throw ApiException.bad(ERROR_PREFIX + "dont.exist");
     }
 
-    List<Long> roleIdList = new ArrayList<>();
+    List<UUID> roleIdList = new ArrayList<>();
     List<AccountRoleEntity> accountRoleEntities = account.getRoles();
     for (AccountRoleEntity entity : accountRoleEntities) {
       roleIdList.add(entity.getRole().getId());
     }
 
-    for (Long id : request.getRoles()) {
+    for (UUID id : request.getRoles()) {
       Optional<RoleEntity> role = roleService.findById(id);
       if (role.isEmpty()) {
         throw ApiException.bad("err.role.dont.exist");
@@ -185,7 +179,7 @@ public class AccountService {
     return repository.save(account);
   }
 
-  public void updatePassword(String newPassword, Long id) {
+  public void updatePassword(String newPassword, UUID id) {
     AccountEntity account = findById(id);
     if (account == null) {
       throw ApiException.bad(ERROR_PREFIX + "dont.exist");
@@ -194,7 +188,7 @@ public class AccountService {
     repository.save(account);
   }
 
-  public void delete(Long id) {
+  public void delete(UUID id) {
     AccountEntity account = findById(id);
     if (account == null) {
       throw ApiException.bad(ERROR_PREFIX + "dont.exist");
@@ -202,7 +196,7 @@ public class AccountService {
     repository.delete(account);
   }
 
-  public AccountEntity updateAccountInfo(UpdateAccountInfoRequest request, Long accountId) {
+  public AccountEntity updateAccountInfo(UpdateAccountInfoRequest request, UUID accountId) {
     AccountEntity account = findById(accountId);
     account.setName(request.getName());
     account.setLastName(request.getLastName());

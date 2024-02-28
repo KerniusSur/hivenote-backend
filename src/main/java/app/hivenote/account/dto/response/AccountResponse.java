@@ -4,6 +4,7 @@ import app.hivenote.auth.dto.response.RoleResponse;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 import lombok.*;
 
 @NoArgsConstructor
@@ -13,7 +14,7 @@ import lombok.*;
 @ToString
 @EqualsAndHashCode
 public class AccountResponse {
-  private Long id;
+  private UUID id;
   private String name;
   private String lastName;
   private String email;

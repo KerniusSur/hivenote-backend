@@ -2,6 +2,7 @@ package app.hivenote.auth.dto.response;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.UUID;
 import lombok.*;
 
 @NoArgsConstructor
@@ -11,7 +12,7 @@ import lombok.*;
 @ToString
 @EqualsAndHashCode
 public class MeResponse {
-  private Long id;
+  private UUID id;
   private String name;
   private String lastName;
   private String email;

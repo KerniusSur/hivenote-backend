@@ -3,13 +3,14 @@ package app.hivenote.account.entity;
 import jakarta.persistence.*;
 
 import java.util.Objects;
+import java.util.UUID;
 
 @Entity(name = "account_role")
 @Table(name = "account_role")
 public class AccountRoleEntity {
   @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long id;
+  @GeneratedValue(strategy = GenerationType.UUID)
+  private UUID id;
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "account_id", referencedColumnName = "id")
@@ -19,11 +20,11 @@ public class AccountRoleEntity {
   @JoinColumn(name = "role_id", referencedColumnName = "id")
   private RoleEntity role;
 
-  public Long getId() {
+  public UUID getId() {
     return id;
   }
 
-  public AccountRoleEntity setId(Long id) {
+  public AccountRoleEntity setId(UUID id) {
     this.id = id;
     return this;
   }

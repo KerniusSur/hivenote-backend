@@ -1,6 +1,7 @@
 package app.hivenote.account.dto.response;
 
 import jakarta.validation.constraints.NotNull;
+import java.util.UUID;
 import lombok.*;
 
 @NoArgsConstructor
@@ -10,7 +11,7 @@ import lombok.*;
 @ToString
 @EqualsAndHashCode
 public class AccountPublicResponse {
-  @NotNull private Long id;
+  @NotNull private UUID id;
   private String name;
   private String lastName;
   @NotNull private String email;

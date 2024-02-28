@@ -5,141 +5,140 @@ import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Entity(name = "account")
 @Table(name = "account")
 public class AccountEntity {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.UUID)
+  private UUID id;
 
-    @Column(unique = true)
-    private String email;
+  @Column(unique = true)
+  private String email;
 
-    private String name;
-    private String lastName;
-    private String password;
-    private String phoneNumber;
-    private Boolean isActive = false;
-    private Boolean isEmailConfirmed = false;
-    private ZonedDateTime lastLogin;
+  private String name;
+  private String lastName;
+  private String password;
+  private String phoneNumber;
+  private Boolean isActive = false;
+  private Boolean isEmailConfirmed = false;
+  private ZonedDateTime lastLogin;
 
+  @Column(unique = true)
+  private String passwordResetToken;
 
-    @Column(unique = true)
-    private String passwordResetToken;
+  private LocalDateTime passwordResetTokenExpirationDate;
 
-    private LocalDateTime passwordResetTokenExpirationDate;
+  @OneToMany(cascade = CascadeType.ALL, mappedBy = "account", orphanRemoval = true)
+  private List<AccountRoleEntity> roles = new ArrayList<>();
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "account", orphanRemoval = true)
-    private List<AccountRoleEntity> roles = new ArrayList<>();
-    
+  public UUID getId() {
+    return id;
+  }
 
+  public AccountEntity setId(UUID id) {
+    this.id = id;
+    return this;
+  }
 
-    public Long getId() {
-        return id;
-    }
+  public String getEmail() {
+    return email;
+  }
 
-    public AccountEntity setId(Long id) {
-        this.id = id;
-        return this;
-    }
+  public AccountEntity setEmail(String email) {
+    this.email = email;
+    return this;
+  }
 
-    public String getEmail() {
-        return email;
-    }
+  public String getName() {
+    return name;
+  }
 
-    public AccountEntity setEmail(String email) {
-        this.email = email;
-        return this;
-    }
+  public AccountEntity setName(String name) {
+    this.name = name;
+    return this;
+  }
 
-    public String getName() {
-        return name;
-    }
+  public String getLastName() {
+    return lastName;
+  }
 
-    public AccountEntity setName(String name) {
-        this.name = name;
-        return this;
-    }
+  public AccountEntity setLastName(String lastName) {
+    this.lastName = lastName;
+    return this;
+  }
 
-    public String getLastName() {
-        return lastName;
-    }
+  public String getPassword() {
+    return password;
+  }
 
-    public AccountEntity setLastName(String lastName) {
-        this.lastName = lastName;
-        return this;
-    }
+  public AccountEntity setPassword(String password) {
+    this.password = password;
+    return this;
+  }
 
-    public String getPassword() {
-        return password;
-    }
+  public String getPhoneNumber() {
+    return phoneNumber;
+  }
 
-    public AccountEntity setPassword(String password) {
-        this.password = password;
-        return this;
-    }
+  public AccountEntity setPhoneNumber(String phoneNumber) {
+    this.phoneNumber = phoneNumber;
+    return this;
+  }
 
-    public String getPhoneNumber() {
-        return phoneNumber;
-    }
+  public Boolean getIsActive() {
+    return isActive;
+  }
 
-    public AccountEntity setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
-        return this;
-    }
+  public AccountEntity setIsActive(Boolean isActive) {
+    this.isActive = isActive;
+    return this;
+  }
 
-    public Boolean getIsActive() {
-        return isActive;
-    }
+  public Boolean getIsEmailConfirmed() {
+    return isEmailConfirmed;
+  }
 
-    public AccountEntity setIsActive(Boolean isActive) {
-        this.isActive = isActive;
-        return this;
-    }
+  public AccountEntity setIsEmailConfirmed(Boolean isEmailConfirmed) {
+    this.isEmailConfirmed = isEmailConfirmed;
+    return this;
+  }
 
-    public Boolean getIsEmailConfirmed() {
-        return isEmailConfirmed;
-    }
+  public ZonedDateTime getLastLogin() {
+    return lastLogin;
+  }
 
-    public AccountEntity setIsEmailConfirmed(Boolean isEmailConfirmed) {
-        this.isEmailConfirmed = isEmailConfirmed;
-        return this;
-    }
+  public AccountEntity setLastLogin(ZonedDateTime lastLogin) {
+    this.lastLogin = lastLogin;
+    return this;
+  }
 
-    public ZonedDateTime getLastLogin() {
-        return lastLogin;
-    }
+  public String getPasswordResetToken() {
+    return passwordResetToken;
+  }
 
-    public AccountEntity setLastLogin(ZonedDateTime lastLogin) {
-        this.lastLogin = lastLogin;
-        return this;
-    }
+  public AccountEntity setPasswordResetToken(String passwordResetToken) {
+    this.passwordResetToken = passwordResetToken;
+    return this;
+  }
 
-    public String getPasswordResetToken() {
-        return passwordResetToken;
-    }
+  public LocalDateTime getPasswordResetTokenExpirationDate() {
+    return passwordResetTokenExpirationDate;
+  }
 
-    public AccountEntity setPasswordResetToken(String passwordResetToken) {
-        this.passwordResetToken = passwordResetToken;
-        return this;
-    }
+  public AccountEntity setPasswordResetTokenExpirationDate(
+      LocalDateTime passwordResetTokenExpirationDate) {
+    this.passwordResetTokenExpirationDate = passwordResetTokenExpirationDate;
+    return this;
+  }
 
-    public LocalDateTime getPasswordResetTokenExpirationDate() {
-        return passwordResetTokenExpirationDate;
-    }
+  public List<AccountRoleEntity> getRoles() {
+    return roles;
+  }
 
-    public AccountEntity setPasswordResetTokenExpirationDate(LocalDateTime passwordResetTokenExpirationDate) {
-        this.passwordResetTokenExpirationDate = passwordResetTokenExpirationDate;
-        return this;
-    }
-
-    public List<AccountRoleEntity> getRoles() {
-        return roles;
-    }
-
-    public AccountEntity setRoles(List<AccountRoleEntity> roles) {
-        this.roles = roles;
-        return this;
-    }
+  public AccountEntity setRoles(List<AccountRoleEntity> roles) {
+    this.roles = roles;
+    return this;
+  }
 }

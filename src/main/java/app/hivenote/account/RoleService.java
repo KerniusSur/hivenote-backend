@@ -5,6 +5,8 @@ import app.hivenote.account.entity.RoleEntity;
 import jakarta.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
+
 import org.springframework.stereotype.Service;
 
 @Transactional
@@ -20,7 +22,7 @@ public class RoleService {
     return repository.findAll();
   }
 
-  public Optional<RoleEntity> findById(Long id) {
+  public Optional<RoleEntity> findById(UUID id) {
     return repository.findById(id);
   }
 

@@ -3,7 +3,6 @@ package app.hivenote.auth.utils;
 import static org.apache.commons.codec.binary.Base64.encodeBase64;
 
 import app.hivenote.account.entity.AccountEntity;
-import app.hivenote.account.entity.Role;
 import app.hivenote.utils.ListUtil;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
@@ -26,11 +25,9 @@ import org.springframework.stereotype.Service;
 @Service
 public class JwtUtil {
   public static final String SPECIALIST = "SPECIALIST";
-  public static final String MANAGER = "MANAGER";
   public static final String ADMIN = "ADMIN";
   private static final Logger LOGGER = LoggerFactory.getLogger(JwtUtil.class);
   private static final String AUTHORITIES = "authorities";
-  private static final String CURRENT_ROLE = "current_role";
   private static final String APPLICATION_ID = "applicationId";
   private static final String EMAIL = "email";
   private static final String ACCESS_TOKEN = "access_token";
@@ -109,20 +106,12 @@ public class JwtUtil {
    * This method returns user id from JWT token.
    *
    * @param token JWT token string.
-   * @return Integer or null.
+   * @return UUID or null.
    */
   @Nullable
-  public Integer getUserId(String token) {
+  public UUID getUserId(String token) {
     isValid(token);
-    return (Integer) jwtParser.parseClaimsJws(token).getBody().get(USER_ID);
-  }
-
-  @Nullable
-  public Role getCurrentRole(String token) {
-    isValid(token);
-    Object o = jwtParser.parseClaimsJws(token).getBody().get(CURRENT_ROLE);
-    Role role = Role.valueOf((String) o);
-    return role;
+    return (UUID) jwtParser.parseClaimsJws(token).getBody().get(USER_ID);
   }
 
   /**

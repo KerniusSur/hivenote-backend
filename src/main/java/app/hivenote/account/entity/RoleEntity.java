@@ -2,22 +2,23 @@ package app.hivenote.account.entity;
 
 import jakarta.persistence.*;
 import java.util.Objects;
+import java.util.UUID;
 
 @Entity(name = "role")
 @Table(name = "role")
 public class RoleEntity {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long id;
+  private UUID id;
 
   @Enumerated(EnumType.STRING)
   private Role name;
 
-  public Long getId() {
+  public UUID getId() {
     return id;
   }
 
-  public RoleEntity setId(Long id) {
+  public RoleEntity setId(UUID id) {
     this.id = id;
     return this;
   }

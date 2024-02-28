@@ -1,6 +1,7 @@
 package app.hivenote.auth.dto.response;
 
 import app.hivenote.account.entity.Role;
+import java.util.UUID;
 import lombok.*;
 
 @NoArgsConstructor
@@ -10,6 +11,6 @@ import lombok.*;
 @ToString
 @EqualsAndHashCode
 public class RoleResponse {
-  private Long id;
+  private UUID id;
   private Role name;
 }
