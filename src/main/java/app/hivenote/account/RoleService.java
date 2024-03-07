@@ -2,11 +2,11 @@ package app.hivenote.account;
 
 import app.hivenote.account.entity.Role;
 import app.hivenote.account.entity.RoleEntity;
+import app.hivenote.exception.ApiException;
 import jakarta.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-
 import org.springframework.stereotype.Service;
 
 @Transactional
@@ -26,7 +26,9 @@ public class RoleService {
     return repository.findById(id);
   }
 
-  public Optional<RoleEntity> findByName(Role name) {
-    return repository.findByName(name);
+  public RoleEntity findByName(Role name) throws ApiException {
+    return repository
+        .findByName(name)
+        .orElseThrow(() -> ApiException.notFound("err.role.dont.exist"));
   }
 }

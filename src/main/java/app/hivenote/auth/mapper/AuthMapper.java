@@ -14,8 +14,6 @@ public class AuthMapper {
         entity.getLastName(),
         entity.getEmail(),
         entity.getPhoneNumber(),
-        entity.getIsActive(),
-        entity.getIsEmailConfirmed(),
         RoleMapper.toResponses(
             entity.getRoles().stream()
                 .map(AccountRoleEntity::getRole)

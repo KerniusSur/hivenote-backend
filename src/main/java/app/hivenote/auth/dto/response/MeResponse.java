@@ -17,7 +17,5 @@ public class MeResponse {
   private String lastName;
   private String email;
   private String phoneNumber;
-  private Boolean isActive;
-  private Boolean isEmailConfirmed;
   private List<RoleResponse> availableRoles = new LinkedList<>();
 }

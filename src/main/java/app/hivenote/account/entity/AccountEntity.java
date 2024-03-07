@@ -23,8 +23,6 @@ public class AccountEntity {
   private String lastName;
   private String password;
   private String phoneNumber;
-  private Boolean isActive = false;
-  private Boolean isEmailConfirmed = false;
   private ZonedDateTime lastLogin;
 
   @Column(unique = true)
@@ -92,24 +90,6 @@ public class AccountEntity {
 
   public AccountEntity setPhoneNumber(String phoneNumber) {
     this.phoneNumber = phoneNumber;
-    return this;
-  }
-
-  public Boolean getIsActive() {
-    return isActive;
-  }
-
-  public AccountEntity setIsActive(Boolean isActive) {
-    this.isActive = isActive;
-    return this;
-  }
-
-  public Boolean getIsEmailConfirmed() {
-    return isEmailConfirmed;
-  }
-
-  public AccountEntity setIsEmailConfirmed(Boolean isEmailConfirmed) {
-    this.isEmailConfirmed = isEmailConfirmed;
     return this;
   }
 
