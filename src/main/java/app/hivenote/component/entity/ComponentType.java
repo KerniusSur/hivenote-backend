@@ -1,7 +1,7 @@
 package app.hivenote.component.entity;
 
 public enum ComponentType {
-  TODO_LIST,
+  CHECKLIST,
   TEXT,
   IMAGE,
   LINK,

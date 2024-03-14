@@ -56,6 +56,7 @@ public class AuthService {
     String email = request.getEmail();
     String rawPassword = request.getPassword();
     AccountEntity account = accountService.findByEmail(email);
+    System.out.println(account.getId());
     if (!encoder.matches(rawPassword, account.getPassword())) {
       throw ApiException.internalError("err.cant.login");
     }

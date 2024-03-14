@@ -7,6 +7,7 @@ import java.util.UUID;
 public class ComponentProperties implements Serializable {
   private String title;
   private Boolean isChecked;
+  private String href;
   private LinkedList<UUID> content;
   private UUID parent;
 
@@ -27,6 +28,15 @@ public class ComponentProperties implements Serializable {
     this.isChecked = isChecked;
     return this;
   }
+
+  public String getHref() {
+    return href;
+  }
+
+    public ComponentProperties setHref(String href) {
+        this.href = href;
+        return this;
+    }
 
   public LinkedList<UUID> getContent() {
     return content;

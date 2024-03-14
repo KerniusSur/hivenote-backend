@@ -23,6 +23,8 @@ management:
       base-path: /api/v1/public
 app:
   BASE_URL: http://localhost:4000
+  file:
+    upload-dir: classpath:file/uploads
   jwt:
     secret: ${JWT_SECRET:Am@z11nGS3eEcR4tBBDcbb}
     expirationMs: 172800000 # 2 days
