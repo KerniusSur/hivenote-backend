@@ -44,18 +44,6 @@ CREATE TABLE IF NOT EXISTS validation
 );
 
 
--- NOTEBOOK TABLE
-CREATE TABLE notebook
-(
-    id          uuid PRIMARY KEY DEFAULT gen_random_uuid(),
-    name        text NOT NULL,
-    account_id  uuid NOT NULL,
-    is_archived boolean          DEFAULT FALSE,
-    is_deleted  boolean          DEFAULT FALSE,
-
-    FOREIGN KEY (account_id) REFERENCES account (id)
-);
-
 -- NOTE TABLE
 CREATE TABLE note
 (
@@ -64,10 +52,7 @@ CREATE TABLE note
     title       text,
     cover_url   text,
     is_archived boolean          DEFAULT FALSE,
-    is_deleted  boolean          DEFAULT FALSE,
-    notebook_id uuid NOT NULL,
-
-    FOREIGN KEY (notebook_id) REFERENCES notebook (id)
+    is_deleted  boolean          DEFAULT FALSE
 );
 
 -- NOTE_ACCESS TABLE

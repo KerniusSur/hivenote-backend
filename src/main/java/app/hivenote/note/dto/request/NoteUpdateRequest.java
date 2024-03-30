@@ -18,5 +18,4 @@ public class NoteUpdateRequest {
   private String coverUrl;
   private Boolean isArchived;
   private Boolean isDeleted;
-  private UUID notebookId;
 }

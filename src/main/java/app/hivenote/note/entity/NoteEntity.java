@@ -2,7 +2,6 @@ package app.hivenote.note.entity;
 
 import app.hivenote.comment.entity.CommentEntity;
 import app.hivenote.component.entity.ComponentEntity;
-import app.hivenote.notebook.entity.NotebookEntity;
 import jakarta.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -23,10 +22,6 @@ public class NoteEntity {
   private String coverUrl;
   private Boolean isArchived;
   private Boolean isDeleted;
-
-  @ManyToOne
-  @JoinColumn(name = "notebook_id", referencedColumnName = "id")
-  private NotebookEntity notebook;
 
   @OneToMany(mappedBy = "note", cascade = CascadeType.ALL, orphanRemoval = true)
   private List<ComponentEntity> components;
@@ -88,15 +83,6 @@ public class NoteEntity {
 
   public NoteEntity setIsDeleted(Boolean deleted) {
     this.isDeleted = deleted;
-    return this;
-  }
-
-  public NotebookEntity getNotebook() {
-    return notebook;
-  }
-
-  public NoteEntity setNotebook(NotebookEntity notebook) {
-    this.notebook = notebook;
     return this;
   }
 
