@@ -33,10 +33,10 @@ public class ComponentProperties implements Serializable {
     return href;
   }
 
-    public ComponentProperties setHref(String href) {
-        this.href = href;
-        return this;
-    }
+  public ComponentProperties setHref(String href) {
+    this.href = href;
+    return this;
+  }
 
   public LinkedList<UUID> getContent() {
     return content;

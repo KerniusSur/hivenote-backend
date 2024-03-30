@@ -28,3 +28,7 @@ app:
   jwt:
     secret: ${JWT_SECRET:Am@z11nGS3eEcR4tBBDcbb}
     expirationMs: 172800000 # 2 days
+socket:
+  server:
+    host: 192.168.0.173
+    port: ${SOCKET_PORT:8085}
