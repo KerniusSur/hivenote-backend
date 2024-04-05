@@ -26,7 +26,7 @@ public class ComponentMapper {
   public static ComponentMessage toMessage(ComponentEntity component) {
     return new ComponentMessage()
         .setId(component.getId())
-        .setType(component.getType())
+        .setComponentType(component.getType())
         .setProperties(component.getProperties());
   }
 }

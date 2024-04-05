@@ -16,6 +16,6 @@ import java.util.UUID;
 @EqualsAndHashCode
 public class ComponentMessage extends Message {
   private UUID id;
-  @NotNull private ComponentType type;
+  @NotNull private ComponentType componentType;
   @NotNull private ComponentProperties properties;
 }
