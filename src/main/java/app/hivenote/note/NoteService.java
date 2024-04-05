@@ -9,6 +9,8 @@ import app.hivenote.note.entity.NoteAccessType;
 import app.hivenote.note.entity.NoteEntity;
 import java.util.List;
 import java.util.UUID;
+
+import app.hivenote.socket.messages.NoteMessage;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -46,6 +48,14 @@ public class NoteService {
   public List<NoteEntity> findRootByAccountAccessAndAccountId(
       NoteAccessType accessType, UUID accountId) {
     return noteRepository.findRootByAccountAccessAndAccountId(accessType, accountId);
+  }
+
+  public void saveFromSocket(NoteMessage noteMessage) {
+    NoteEntity noteEntity = findById(UUID.fromString(noteMessage.getId()));
+    noteEntity.setTitle(noteMessage.getTitle());
+    noteEntity.setCoverUrl(noteMessage.getCoverUrl());
+
+    noteRepository.save(noteEntity);
   }
 
   public NoteEntity create(NoteCreateRequest request, UUID accountId) {

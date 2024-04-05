@@ -28,7 +28,7 @@ public class CommentMapper {
 
   public static CommentMessage toMessage(CommentEntity comment) {
     return new CommentMessage()
-        .setId(comment.getId())
+        .setId(comment.getId().toString())
         .setBody(comment.getBody())
         .setNoteLine(comment.getNoteLine())
         .setIsResolved(comment.getIsResolved())

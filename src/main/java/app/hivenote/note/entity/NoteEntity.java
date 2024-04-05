@@ -20,13 +20,21 @@ public class NoteEntity {
   private Boolean isArchived;
   private Boolean isDeleted;
 
-  @OneToMany(mappedBy = "note", cascade = CascadeType.ALL, orphanRemoval = true)
+  @OneToMany(
+      mappedBy = "note",
+      cascade = CascadeType.ALL,
+      orphanRemoval = true,
+      fetch = FetchType.EAGER)
   private List<ComponentEntity> components;
 
   @OneToMany(mappedBy = "note", cascade = CascadeType.ALL, orphanRemoval = true)
   private List<NoteAccessEntity> accountAccess = new ArrayList<>();
 
-  @OneToMany(mappedBy = "note", cascade = CascadeType.ALL, orphanRemoval = true)
+  @OneToMany(
+      mappedBy = "note",
+      cascade = CascadeType.ALL,
+      orphanRemoval = true,
+      fetch = FetchType.EAGER)
   private List<CommentEntity> comments;
 
   @ManyToOne

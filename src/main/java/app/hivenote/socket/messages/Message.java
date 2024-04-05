@@ -1,17 +1,15 @@
-package app.hivenote.socket;
+package app.hivenote.socket.messages;
 
-import java.time.ZonedDateTime;
+import app.hivenote.socket.MessageType;
 import lombok.*;
 
-@Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
 @ToString
-@EqualsAndHashCode
 public class Message {
   private MessageType type;
   private String room;
-  private ZonedDateTime timestamp;
+  //  private LocalDateTime createdAt = LocalDateTime.now();
 }
