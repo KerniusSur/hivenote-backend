@@ -1,21 +1,19 @@
 -- Role TABLE
 CREATE TABLE IF NOT EXISTS role
 (
-    id   uuid PRIMARY KEY,
+    id   uuid PRIMARY KEY DEFAULT gen_random_uuid(),
     name text NOT NULL
 );
 
 -- ACCOUNT TABLE
 CREATE TABLE IF NOT EXISTS account
 (
-    id                                   uuid PRIMARY KEY,
+    id                                   uuid PRIMARY KEY DEFAULT gen_random_uuid(),
     name                                 text,
     last_name                            text,
     email                                text UNIQUE NOT NULL,
     password                             text,
     phone_number                         text,
-    is_active                            boolean DEFAULT FALSE,
-    is_email_confirmed                   boolean DEFAULT FALSE,
     last_login                           timestamp,
     password_reset_token                 text,
     password_reset_token_expiration_date timestamp
@@ -24,10 +22,10 @@ CREATE TABLE IF NOT EXISTS account
 -- ACCOUNT_ROLE TABLE
 CREATE TABLE IF NOT EXISTS account_role
 (
-    id         uuid PRIMARY KEY,
+    id         uuid PRIMARY KEY DEFAULT gen_random_uuid(),
     account_id uuid NOT NULL,
     role_id    uuid NOT NULL,
-    deleted    boolean DEFAULT FALSE,
+    deleted    boolean          DEFAULT FALSE,
 
     FOREIGN KEY (account_id) REFERENCES account (id),
     FOREIGN KEY (role_id) REFERENCES role (id)
@@ -36,7 +34,7 @@ CREATE TABLE IF NOT EXISTS account_role
 -- VALIDATION TABLE
 CREATE TABLE IF NOT EXISTS validation
 (
-    id                uuid PRIMARY KEY,
+    id                uuid PRIMARY KEY DEFAULT gen_random_uuid(),
     type              TEXT    NOT NULL,
     validation_value  TEXT    NOT NULL,
     value_to_validate TEXT    NOT NULL,
@@ -46,36 +44,23 @@ CREATE TABLE IF NOT EXISTS validation
 );
 
 
--- NOTEBOOK TABLE
-CREATE TABLE notebook
-(
-    id          uuid PRIMARY KEY,
-    name        text NOT NULL,
-    account_id  uuid NOT NULL,
-    is_archived boolean DEFAULT FALSE,
-    is_deleted  boolean DEFAULT FALSE,
-
-    FOREIGN KEY (account_id) REFERENCES account (id)
-);
-
 -- NOTE TABLE
 CREATE TABLE note
 (
-    id          uuid PRIMARY KEY,
-    type        text,
+    id          uuid PRIMARY KEY DEFAULT gen_random_uuid(),
     title       text,
     cover_url   text,
-    is_archived boolean DEFAULT FALSE,
-    is_deleted  boolean DEFAULT FALSE,
-    notebook_id uuid NOT NULL,
+    is_archived boolean NOT NULL DEFAULT FALSE,
+    is_deleted  boolean NOT NULL DEFAULT FALSE,
+    parent_id   uuid,
 
-    FOREIGN KEY (notebook_id) REFERENCES notebook (id)
+    FOREIGN KEY (parent_id) REFERENCES note (id)
 );
 
 -- NOTE_ACCESS TABLE
 CREATE TABLE note_access
 (
-    id          uuid PRIMARY KEY,
+    id          uuid PRIMARY KEY DEFAULT gen_random_uuid(),
     account_id  uuid NOT NULL,
     note_id     uuid NOT NULL,
     access_type text,
@@ -87,7 +72,7 @@ CREATE TABLE note_access
 -- COMPONENT TABLE
 CREATE TABLE component
 (
-    id         uuid PRIMARY KEY,
+    id         uuid PRIMARY KEY DEFAULT gen_random_uuid(),
     type       text  NOT NULL,
     properties jsonb NOT NULL,
     parent_id  uuid,
@@ -100,7 +85,7 @@ CREATE TABLE component
 -- EVENT TABLE
 CREATE TABLE event
 (
-    id          uuid PRIMARY KEY,
+    id          uuid PRIMARY KEY DEFAULT gen_random_uuid(),
     title       text,
     description text,
     event_start timestamp with time zone,
@@ -113,7 +98,7 @@ CREATE TABLE event
 -- COMMENT TABLE
 CREATE TABLE comment
 (
-    id          uuid PRIMARY KEY,
+    id          uuid PRIMARY KEY DEFAULT gen_random_uuid(),
     body        text,
     account_id  uuid,
     note_id     uuid,

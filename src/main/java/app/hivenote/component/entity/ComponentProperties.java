@@ -1,14 +1,18 @@
 package app.hivenote.component.entity;
 
 import java.io.Serializable;
-import java.util.LinkedList;
-import java.util.UUID;
+import lombok.*;
 
 public class ComponentProperties implements Serializable {
   private String title;
-  private Boolean isChecked;
-  private LinkedList<UUID> content;
-  private UUID parent;
+  private String text;
+  private Integer level;
+  private Object items;
+  private String message;
+  private String alignment;
+  private String caption;
+  private String html;
+  private String link;
 
   public String getTitle() {
     return title;
@@ -19,30 +23,91 @@ public class ComponentProperties implements Serializable {
     return this;
   }
 
-  public Boolean getIsChecked() {
-    return isChecked;
+  public String getText() {
+    return text;
   }
 
-  public ComponentProperties setIsChecked(Boolean isChecked) {
-    this.isChecked = isChecked;
+  public ComponentProperties setText(String text) {
+    this.text = text;
     return this;
   }
 
-  public LinkedList<UUID> getContent() {
-    return content;
+  public Integer getLevel() {
+    return level;
   }
 
-  public ComponentProperties setContent(LinkedList<UUID> content) {
-    this.content = content;
+  public ComponentProperties setLevel(Integer level) {
+    this.level = level;
     return this;
   }
 
-  public UUID getParent() {
-    return parent;
+  public Object getItems() {
+    return items;
   }
 
-  public ComponentProperties setParent(UUID parent) {
-    this.parent = parent;
+  public ComponentProperties setItems(String items) {
+    this.items = items;
     return this;
+  }
+
+  public ComponentProperties setItems(ComponentItems items) {
+    this.items = items;
+    return this;
+  }
+
+  public String getMessage() {
+    return message;
+  }
+
+  public ComponentProperties setMessage(String message) {
+    this.message = message;
+    return this;
+  }
+
+  public String getAlignment() {
+    return alignment;
+  }
+
+  public ComponentProperties setAlignment(String alignment) {
+    this.alignment = alignment;
+    return this;
+  }
+
+  public String getCaption() {
+    return caption;
+  }
+
+  public ComponentProperties setCaption(String caption) {
+    this.caption = caption;
+    return this;
+  }
+
+  public String getHtml() {
+    return html;
+  }
+
+  public ComponentProperties setHtml(String html) {
+    this.html = html;
+    return this;
+  }
+
+  public String getLink() {
+    return link;
+  }
+
+  public ComponentProperties setLink(String link) {
+    this.link = link;
+    return this;
+  }
+
+  @NoArgsConstructor
+  @AllArgsConstructor
+  @Getter
+  @Setter
+  @ToString
+  @EqualsAndHashCode
+  public static class ComponentItems {
+    private String text;
+    private Boolean checked;
   }
 }

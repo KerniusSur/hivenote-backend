@@ -202,7 +202,6 @@ public class AccountService {
     account.setLastName(request.getLastName());
     account.setPhoneNumber(request.getPhoneNumber());
     if (!Objects.equals(account.getEmail(), request.getEmail())) {
-      account.setIsEmailConfirmed(false);
       account.setEmail(request.getEmail());
       String uuid = UUID.randomUUID().toString();
       ZonedDateTime expirationDate = ZonedDateTime.now().plusDays(7);

@@ -20,6 +20,9 @@ public class WebSecurityConfig {
     "/api/auth/*/login",
     "/api/auth/*/logoff",
     "/api/v1/public/**",
+    "/socket.io/**",
+    "/socket.io",
+    "/error",
   };
 
   public static final String[] USER_URL_LIST = {"/api/v1/user/**"};
@@ -43,6 +46,9 @@ public class WebSecurityConfig {
         .sessionManagement(
             (sessionManagement) ->
                 sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+        // TODO: remove permitAll for production
+        .authorizeHttpRequests(
+            (authorizeHttpRequests) -> authorizeHttpRequests.requestMatchers("/**").permitAll())
         .authorizeHttpRequests(
             (authorizeHttpRequests) ->
                 authorizeHttpRequests.requestMatchers(AUTH_WHITELIST).permitAll())
@@ -56,7 +62,9 @@ public class WebSecurityConfig {
                     .hasAnyAuthority(JwtUtil.SPECIALIST, JwtUtil.ADMIN))
         .authorizeHttpRequests(
             (authorizeHttpRequests) ->
-                authorizeHttpRequests.requestMatchers(ADMIN_URL_LIST).hasAnyAuthority(JwtUtil.ADMIN))
+                authorizeHttpRequests
+                    .requestMatchers(ADMIN_URL_LIST)
+                    .hasAnyAuthority(JwtUtil.ADMIN))
         .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
 
     return http.build();

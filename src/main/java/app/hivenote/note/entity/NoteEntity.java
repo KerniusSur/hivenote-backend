@@ -2,7 +2,6 @@ package app.hivenote.note.entity;
 
 import app.hivenote.comment.entity.CommentEntity;
 import app.hivenote.component.entity.ComponentEntity;
-import app.hivenote.notebook.entity.NotebookEntity;
 import jakarta.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -16,17 +15,10 @@ public class NoteEntity {
   @GeneratedValue(strategy = GenerationType.UUID)
   private UUID id;
 
-  @Enumerated(EnumType.STRING)
-  private NoteType type;
-
   private String title;
   private String coverUrl;
   private Boolean isArchived;
   private Boolean isDeleted;
-
-  @ManyToOne
-  @JoinColumn(name = "notebook_id", referencedColumnName = "id")
-  private NotebookEntity notebook;
 
   @OneToMany(mappedBy = "note", cascade = CascadeType.ALL, orphanRemoval = true)
   private List<ComponentEntity> components;
@@ -37,21 +29,29 @@ public class NoteEntity {
   @OneToMany(mappedBy = "note", cascade = CascadeType.ALL, orphanRemoval = true)
   private List<CommentEntity> comments;
 
+  @ManyToOne
+  @JoinColumn(name = "parent_id", referencedColumnName = "id")
+  private NoteEntity parent;
+
+  @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL, orphanRemoval = true)
+  private List<NoteEntity> children;
+
+  @PrePersist
+  public void init() {
+    if (this.isArchived == null) {
+      this.isArchived = false;
+    }
+    if (this.isDeleted == null) {
+      this.isDeleted = false;
+    }
+  }
+
   public UUID getId() {
     return id;
   }
 
   public NoteEntity setId(UUID id) {
     this.id = id;
-    return this;
-  }
-
-  public NoteType getType() {
-    return type;
-  }
-
-  public NoteEntity setType(NoteType type) {
-    this.type = type;
     return this;
   }
 
@@ -91,15 +91,6 @@ public class NoteEntity {
     return this;
   }
 
-  public NotebookEntity getNotebook() {
-    return notebook;
-  }
-
-  public NoteEntity setNotebook(NotebookEntity notebook) {
-    this.notebook = notebook;
-    return this;
-  }
-
   public List<ComponentEntity> getComponents() {
     return components;
   }
@@ -124,6 +115,24 @@ public class NoteEntity {
 
   public NoteEntity setComments(List<CommentEntity> comments) {
     this.comments = comments;
+    return this;
+  }
+
+  public NoteEntity getParent() {
+    return parent;
+  }
+
+  public NoteEntity setParent(NoteEntity parent) {
+    this.parent = parent;
+    return this;
+  }
+
+  public List<NoteEntity> getChildren() {
+    return children;
+  }
+
+  public NoteEntity setChildren(List<NoteEntity> children) {
+    this.children = children;
     return this;
   }
 }

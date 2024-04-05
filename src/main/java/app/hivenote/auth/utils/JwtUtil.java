@@ -111,7 +111,7 @@ public class JwtUtil {
   @Nullable
   public UUID getUserId(String token) {
     isValid(token);
-    return (UUID) jwtParser.parseClaimsJws(token).getBody().get(USER_ID);
+    return UUID.fromString((String) jwtParser.parseClaimsJws(token).getBody().get(USER_ID));
   }
 
   /**
