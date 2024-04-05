@@ -2,6 +2,7 @@ package app.hivenote.component.mapper;
 
 import app.hivenote.component.dto.response.ComponentResponse;
 import app.hivenote.component.entity.ComponentEntity;
+import app.hivenote.socket.messages.ComponentMessage;
 import java.util.stream.Collectors;
 
 public class ComponentMapper {
@@ -20,5 +21,12 @@ public class ComponentMapper {
                             : component.getChildren().stream()
                                 .map(ComponentMapper::toResponse)
                                 .collect(Collectors.toList())));
+  }
+
+  public static ComponentMessage toMessage(ComponentEntity component) {
+    return new ComponentMessage()
+        .setId(component.getId())
+        .setType(component.getType())
+        .setProperties(component.getProperties());
   }
 }
