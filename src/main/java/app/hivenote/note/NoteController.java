@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.*;
 @Tag(name = "note")
 @Transactional
 @RestController
-@RequestMapping("/api/v1/user/note")
+@RequestMapping("/api/v1/user/notes")
 public class NoteController {
   private final NoteService noteService;
 
@@ -25,19 +25,25 @@ public class NoteController {
     this.noteService = noteService;
   }
 
+  @GetMapping("/{id}")
+  public NoteResponse findById(@PathVariable String id, AuthenticatedProfile profile) {
+    return NoteMapper.toResponse(
+        noteService.findByIdAndAccountId(UUID.fromString(id), profile.getId()));
+  }
+
   @GetMapping("/owner")
-  public List<NoteResponse> findAllNotesWithOwnerAccess(AuthenticatedProfile profile) {
+  public List<NoteResponse> findAllRootNotesWithOwnerAccess(AuthenticatedProfile profile) {
     return ListUtil.map(
-        noteService.findByAccountAccessAndAccountId(NoteAccessType.OWNER, profile.getId()),
+        noteService.findRootByAccountAccessAndAccountId(NoteAccessType.OWNER, profile.getId()),
         NoteMapper::toResponse);
   }
 
   @GetMapping("/shared")
-  public List<NoteResponse> findAllNotesWithSharedAccess(AuthenticatedProfile profile) {
+  public List<NoteResponse> findAllRootNotesWithSharedAccess(AuthenticatedProfile profile) {
     List<NoteEntity> notes =
-        noteService.findByAccountAccessAndAccountId(NoteAccessType.EDITOR, profile.getId());
+        noteService.findRootByAccountAccessAndAccountId(NoteAccessType.EDITOR, profile.getId());
     notes.addAll(
-        noteService.findByAccountAccessAndAccountId(NoteAccessType.VIEWER, profile.getId()));
+        noteService.findRootByAccountAccessAndAccountId(NoteAccessType.VIEWER, profile.getId()));
 
     return ListUtil.map(notes, NoteMapper::toResponse);
   }

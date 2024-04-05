@@ -13,16 +13,32 @@ import java.util.stream.Collectors;
 
 public class NoteMapper {
   public static NoteResponse toResponse(NoteEntity note) {
-    return new NoteResponse()
-        .setId(note.getId())
-        .setType(note.getType())
-        .setTitle(note.getTitle())
-        .setCoverUrl(note.getCoverUrl())
-        .setIsArchived(note.getIsArchived())
-        .setIsDeleted(note.getIsDeleted())
-        .setComponents(ListUtil.map(note.getComponents(), ComponentMapper::toResponse))
-        .setCollaborators(toCollaboratorResponse(note))
-        .setComments(ListUtil.map(note.getComments(), CommentMapper::toResponse));
+    NoteResponse response =
+        new NoteResponse()
+            .setId(note.getId())
+            .setTitle(note.getTitle())
+            .setCoverUrl(note.getCoverUrl())
+            .setIsArchived(note.getIsArchived())
+            .setIsDeleted(note.getIsDeleted())
+            .setCollaborators(toCollaboratorResponse(note));
+
+    if (note.getComponents() != null) {
+      response.setComponents(ListUtil.map(note.getComponents(), ComponentMapper::toResponse));
+    }
+
+    if (note.getComments() != null) {
+      response.setComments(ListUtil.map(note.getComments(), CommentMapper::toResponse));
+    }
+
+//    if (note.getParent() != null) {
+//      response.setParent(toResponse(note.getParent()));
+//    }
+
+    if (note.getChildren() != null) {
+      response.setChildren(ListUtil.map(note.getChildren(), NoteMapper::toResponse));
+    }
+
+    return response;
   }
 
   public static List<AccountPublicResponse> toCollaboratorResponse(NoteEntity note) {

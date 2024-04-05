@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Tag(name = "comment")
 @Transactional
 @RestController
-@RequestMapping("/api/v1/user/comment")
+@RequestMapping("/api/v1/user/comments")
 public class CommentController {
   private final CommentService commentService;
 

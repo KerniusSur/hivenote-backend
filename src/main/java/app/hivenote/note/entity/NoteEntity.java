@@ -15,9 +15,6 @@ public class NoteEntity {
   @GeneratedValue(strategy = GenerationType.UUID)
   private UUID id;
 
-  @Enumerated(EnumType.STRING)
-  private NoteType type;
-
   private String title;
   private String coverUrl;
   private Boolean isArchived;
@@ -32,21 +29,29 @@ public class NoteEntity {
   @OneToMany(mappedBy = "note", cascade = CascadeType.ALL, orphanRemoval = true)
   private List<CommentEntity> comments;
 
+  @ManyToOne
+  @JoinColumn(name = "parent_id", referencedColumnName = "id")
+  private NoteEntity parent;
+
+  @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL, orphanRemoval = true)
+  private List<NoteEntity> children;
+
+  @PrePersist
+  public void init() {
+    if (this.isArchived == null) {
+      this.isArchived = false;
+    }
+    if (this.isDeleted == null) {
+      this.isDeleted = false;
+    }
+  }
+
   public UUID getId() {
     return id;
   }
 
   public NoteEntity setId(UUID id) {
     this.id = id;
-    return this;
-  }
-
-  public NoteType getType() {
-    return type;
-  }
-
-  public NoteEntity setType(NoteType type) {
-    this.type = type;
     return this;
   }
 
@@ -110,6 +115,24 @@ public class NoteEntity {
 
   public NoteEntity setComments(List<CommentEntity> comments) {
     this.comments = comments;
+    return this;
+  }
+
+  public NoteEntity getParent() {
+    return parent;
+  }
+
+  public NoteEntity setParent(NoteEntity parent) {
+    this.parent = parent;
+    return this;
+  }
+
+  public List<NoteEntity> getChildren() {
+    return children;
+  }
+
+  public NoteEntity setChildren(List<NoteEntity> children) {
+    this.children = children;
     return this;
   }
 }

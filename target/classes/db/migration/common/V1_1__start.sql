@@ -48,11 +48,13 @@ CREATE TABLE IF NOT EXISTS validation
 CREATE TABLE note
 (
     id          uuid PRIMARY KEY DEFAULT gen_random_uuid(),
-    type        text,
     title       text,
     cover_url   text,
-    is_archived boolean          DEFAULT FALSE,
-    is_deleted  boolean          DEFAULT FALSE
+    is_archived boolean NOT NULL DEFAULT FALSE,
+    is_deleted  boolean NOT NULL DEFAULT FALSE,
+    parent_id   uuid,
+
+    FOREIGN KEY (parent_id) REFERENCES note (id)
 );
 
 -- NOTE_ACCESS TABLE

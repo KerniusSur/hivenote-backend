@@ -1,6 +1,5 @@
 package app.hivenote.note.dto.request;
 
-import app.hivenote.note.entity.NoteType;
 import jakarta.validation.constraints.NotNull;
 import java.util.UUID;
 import lombok.*;
@@ -13,7 +12,6 @@ import lombok.*;
 @EqualsAndHashCode
 public class NoteUpdateRequest {
   @NotNull private UUID id;
-  private NoteType type;
   @NotNull private String title;
   private String coverUrl;
   private Boolean isArchived;

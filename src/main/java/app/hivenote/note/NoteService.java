@@ -26,8 +26,16 @@ public class NoteService {
         .orElseThrow(() -> ApiException.notFound(ERROR_PREFIX + "notFound"));
   }
 
-  public List<NoteEntity> findByIdAndAccountId(UUID noteId, UUID accountId) {
-    return noteRepository.findByAccountIdAndNoteId(accountId, noteId);
+  public NoteEntity findByIdAndIsDeleted(UUID id, Boolean isDeleted) {
+    return noteRepository
+        .findByIdAndIsDeleted(id, isDeleted)
+        .orElseThrow(() -> ApiException.notFound(ERROR_PREFIX + "notFound"));
+  }
+
+  public NoteEntity findByIdAndAccountId(UUID noteId, UUID accountId) {
+    return noteRepository
+        .findByAccountIdAndNoteId(accountId, noteId)
+        .orElseThrow(() -> ApiException.notFound(ERROR_PREFIX + "notFound"));
   }
 
   public List<NoteEntity> findByAccountAccessAndAccountId(
@@ -35,20 +43,53 @@ public class NoteService {
     return noteRepository.findByAccountAccessAndAccountId(accessType, accountId);
   }
 
+  public List<NoteEntity> findRootByAccountAccessAndAccountId(
+      NoteAccessType accessType, UUID accountId) {
+    return noteRepository.findRootByAccountAccessAndAccountId(accessType, accountId);
+  }
+
   public NoteEntity create(NoteCreateRequest request, UUID accountId) {
+    NoteEntity parent = null;
+    if (request.getParentId() != null) {
+      parent = findById(request.getParentId());
+      parent.getAccountAccess().stream()
+          .filter(
+              access ->
+                  access.getAccount().getId().equals(accountId)
+                          && access.getAccessType() == NoteAccessType.OWNER
+                      || access.getAccessType() == NoteAccessType.EDITOR)
+          .findAny()
+          .orElseThrow(() -> ApiException.unauthorized(ERROR_PREFIX + "unauthorized"));
+    }
     NoteEntity noteEntity =
-        new NoteEntity()
-            .setType(request.getType())
-            .setTitle(request.getTitle())
-            .setCoverUrl(request.getCoverUrl());
+        new NoteEntity().setTitle(request.getTitle()).setCoverUrl(request.getCoverUrl());
 
-    NoteAccessEntity noteAccessEntity =
-        new NoteAccessEntity()
-            .setAccount(new AccountEntity().setId(accountId))
-            .setNote(noteEntity)
-            .setAccessType(NoteAccessType.OWNER);
+    if (parent != null) {
+      noteEntity.setParent(parent);
+    }
 
-    noteEntity.getAccountAccess().add(noteAccessEntity);
+    List<NoteAccessEntity> noteAccessEntities =
+        parent != null
+            ? parent.getAccountAccess().stream()
+                .map(
+                    access ->
+                        new NoteAccessEntity()
+                            .setNote(noteEntity)
+                            .setAccount(access.getAccount())
+                            .setAccessType(access.getAccessType()))
+                .toList()
+            : List.of(
+                new NoteAccessEntity()
+                    .setNote(noteEntity)
+                    .setAccount(new AccountEntity().setId(accountId))
+                    .setAccessType(NoteAccessType.OWNER));
+
+    for (NoteAccessEntity access : noteAccessEntities) {
+      System.out.println("ID --->" + access.getAccount().getId());
+      System.out.println("ACCESS --->" + access.getAccessType());
+    }
+
+    noteEntity.getAccountAccess().addAll(noteAccessEntities);
     return noteRepository.save(noteEntity);
   }
 
@@ -87,44 +128,4 @@ public class NoteService {
     noteEntity.setIsDeleted(true);
     noteRepository.save(noteEntity);
   }
-
-   public class ListNode {
-      int val;
-      ListNode next;
-      ListNode() {}
-      ListNode(int val) { this.val = val; }
-      ListNode(int val, ListNode next) { this.val = val; this.next = next; }
- }
-
- public void test () {
-    ListNode l1 = new ListNode(2, new ListNode(4, new ListNode(3)));
-    ListNode l2 = new ListNode(5, new ListNode(6, new ListNode(4)));
-    ListNode result = addTwoNumbers(l1, l2);
-
-    while (result != null) {
-      System.out.println(result.val);
-      result = result.next;
-    }
-  }
-
-  public ListNode addTwoNumbers(ListNode l1, ListNode l2) {
-    ListNode dummy = new ListNode(0);
-    ListNode current = dummy;
-
-    int carry = 0;
-    while (l1 != null || l2 != null) {
-      int x = (l1 != null) ? l1.val : 0;
-      int y = (l2 != null) ? l2.val : 0;
-      int sum = carry + x + y;
-      carry = sum / 10;
-      current.next = new ListNode(sum % 10);
-      current = current.next;
-      if (l1 != null) l1 = l1.next;
-      if (l2 != null) l2 = l2.next;
-    }
-    if (carry > 0) {
-      current.next = new ListNode(carry);
-    }
-    return dummy.next;
- }
 }
