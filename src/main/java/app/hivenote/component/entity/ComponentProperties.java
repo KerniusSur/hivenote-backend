@@ -1,13 +1,15 @@
 package app.hivenote.component.entity;
 
+import io.vavr.control.Either;
 import java.io.Serializable;
+import java.util.List;
 import lombok.*;
 
 public class ComponentProperties implements Serializable {
   private String title;
   private String text;
   private Integer level;
-  private Object items;
+  private List<Either<ComponentItems, String>> items;
   private String message;
   private String alignment;
   private String caption;
@@ -45,14 +47,19 @@ public class ComponentProperties implements Serializable {
     return items;
   }
 
-  public ComponentProperties setItems(String items) {
+  public ComponentProperties setItems(List<Either<ComponentItems, String>> items) {
     this.items = items;
     return this;
   }
 
-  public ComponentProperties setItems(ComponentItems items) {
-    this.items = items;
-    return this;
+  public List<ComponentItems> getItemsList() {
+    if (items == null) return List.of();
+    return items.stream().map(either -> either.isLeft() ? either.getLeft() : null).toList();
+  }
+
+  public List<String> getItemsString() {
+    if (items == null) return List.of();
+    return items.stream().map(either -> either.isRight() ? either.get() : null).toList();
   }
 
   public String getMessage() {

@@ -54,7 +54,7 @@ public class NoteMapper {
 
   public static NoteMessage toMessage(NoteEntity note) {
     return new NoteMessage()
-        .setId(note.getId())
+        .setId(note.getId().toString())
         .setTitle(note.getTitle())
         .setCoverUrl(note.getCoverUrl())
         .setComponents(ListUtil.map(note.getComponents(), ComponentMapper::toMessage))
