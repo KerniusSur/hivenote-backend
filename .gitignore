@@ -18,6 +18,7 @@ HELP.md
 .idea/
 .idea/**
 /.idea/**
+.idea/compiler.xml
 *.iws
 *.iml
 *.ipr
