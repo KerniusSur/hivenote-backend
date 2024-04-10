@@ -10,11 +10,11 @@ import io.jsonwebtoken.security.SignatureException;
 import jakarta.annotation.Nullable;
 import jakarta.servlet.http.HttpServletRequest;
 import java.nio.charset.StandardCharsets;
-import java.security.Key;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
+import javax.crypto.SecretKey;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,7 +35,7 @@ public class JwtUtil {
   private static final String USER_ID = "user_id";
 
   private final CookieUtil cookieUtil;
-  private final Key secretKey;
+  private final SecretKey secretKey;
   private final JwtParser jwtParser;
   private final int jwtExpirationMs;
 
@@ -45,7 +45,7 @@ public class JwtUtil {
       @Value("${app.jwt.expirationMs}") int jwtExpirationMs) {
     this.cookieUtil = cookieUtil;
     this.secretKey = Keys.hmacShaKeyFor(encodeBase64(jwtSecret.getBytes(StandardCharsets.UTF_8)));
-    this.jwtParser = Jwts.parserBuilder().setSigningKey(this.secretKey).build();
+    this.jwtParser = Jwts.parser().verifyWith((SecretKey) this.secretKey).build();
     this.jwtExpirationMs = jwtExpirationMs;
   }
 
@@ -57,9 +57,12 @@ public class JwtUtil {
             .collect(Collectors.toList());
     return Jwts.builder()
         .setSubject("me")
+        .subject("me")
         .claim(USER_ID, user.getId())
         .claim(AUTHORITIES, authorities)
         .setIssuedAt(now)
+        .issuedAt(now)
+        .expiration(new Date(now.getTime() + jwtExpirationMs))
         .setExpiration(new Date(now.getTime() + jwtExpirationMs))
         .signWith(secretKey)
         .compact();
