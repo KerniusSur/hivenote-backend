@@ -6,10 +6,12 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-public interface NoteRepository extends JpaRepository<NoteEntity, UUID> {
+public interface NoteRepository
+    extends JpaRepository<NoteEntity, UUID>, JpaSpecificationExecutor<NoteEntity> {
   @Query(
       "SELECT n FROM NoteEntity n JOIN n.accountAccess a WHERE a.accessType = :accessType AND a.account.id = :accountId AND n.isDeleted = false")
   List<NoteEntity> findByAccountAccessAndAccountId(

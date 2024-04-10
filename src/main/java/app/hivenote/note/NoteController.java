@@ -8,7 +8,9 @@ import app.hivenote.note.entity.NoteAccessType;
 import app.hivenote.note.entity.NoteEntity;
 import app.hivenote.note.mapper.NoteMapper;
 import app.hivenote.utils.ListUtil;
+import io.micrometer.common.lang.Nullable;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.persistence.AccessType;
 import jakarta.transaction.Transactional;
 import java.util.List;
 import java.util.UUID;
@@ -46,6 +48,19 @@ public class NoteController {
         noteService.findRootByAccountAccessAndAccountId(NoteAccessType.VIEWER, profile.getId()));
 
     return ListUtil.map(notes, NoteMapper::toResponse);
+  }
+
+  @GetMapping("/filter")
+  public List<NoteResponse> findAllFilteredBy(
+      @Nullable AccessType accessType,
+      @Nullable String searchString,
+      @Nullable Boolean isArchived,
+      @Nullable Boolean isDeleted,
+      AuthenticatedProfile profile) {
+    return ListUtil.map(
+        noteService.findAllFilteredBy(
+            profile.getId(), accessType, searchString, isArchived, isDeleted),
+        NoteMapper::toResponse);
   }
 
   @PostMapping

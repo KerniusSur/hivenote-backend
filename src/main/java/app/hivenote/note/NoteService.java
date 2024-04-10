@@ -1,5 +1,7 @@
 package app.hivenote.note;
 
+import static app.hivenote.note.specifications.NoteSpecifications.getSpecifications;
+
 import app.hivenote.account.entity.AccountEntity;
 import app.hivenote.component.ComponentService;
 import app.hivenote.component.entity.ComponentEntity;
@@ -10,6 +12,9 @@ import app.hivenote.note.entity.NoteAccessEntity;
 import app.hivenote.note.entity.NoteAccessType;
 import app.hivenote.note.entity.NoteEntity;
 import app.hivenote.socket.messages.NoteMessage;
+import app.hivenote.utils.SpecificationUtil;
+import io.micrometer.common.lang.Nullable;
+import jakarta.persistence.AccessType;
 import java.util.List;
 import java.util.UUID;
 import org.springframework.stereotype.Service;
@@ -35,6 +40,17 @@ public class NoteService {
     return noteRepository
         .findByIdAndIsDeleted(id, isDeleted)
         .orElseThrow(() -> ApiException.notFound(ERROR_PREFIX + "notFound"));
+  }
+
+  public List<NoteEntity> findAllFilteredBy(
+      @Nullable UUID accountId,
+      @Nullable AccessType accessType,
+      @Nullable String searchString,
+      @Nullable Boolean isArchived,
+      @Nullable Boolean isDeleted) {
+    return noteRepository.findAll(
+        SpecificationUtil.toANDSpecification(
+            getSpecifications(accountId, accessType, searchString, isArchived, isDeleted)));
   }
 
   public NoteEntity findByIdAndAccountId(UUID noteId, UUID accountId) {

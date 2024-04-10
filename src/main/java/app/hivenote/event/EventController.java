@@ -16,10 +16,10 @@ import java.util.UUID;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
 
-@Tag(name = "event")
+@Tag(name = "events")
 @Transactional
 @RestController
-@RequestMapping("/api/v1/user/event")
+@RequestMapping("/api/v1/user/events")
 public class EventController {
   private final EventService eventService;
 
