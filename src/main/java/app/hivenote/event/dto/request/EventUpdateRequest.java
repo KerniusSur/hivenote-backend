@@ -1,5 +1,6 @@
 package app.hivenote.event.dto.request;
 
+import jakarta.validation.constraints.NotNull;
 import java.util.UUID;
 import lombok.*;
 
@@ -10,5 +11,5 @@ import lombok.*;
 @ToString
 @EqualsAndHashCode(callSuper = false)
 public class EventUpdateRequest extends EventCreateRequest {
-  private UUID id;
+  @NotNull private UUID id;
 }

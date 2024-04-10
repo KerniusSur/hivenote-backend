@@ -1,6 +1,7 @@
 package app.hivenote.event.dto.response;
 
 import app.hivenote.account.dto.response.AccountPublicResponse;
+import jakarta.validation.constraints.NotNull;
 import java.time.ZonedDateTime;
 import java.util.UUID;
 import lombok.*;
@@ -12,11 +13,11 @@ import lombok.*;
 @ToString
 @EqualsAndHashCode
 public class EventResponse {
-  private UUID id;
-  private String title;
+  @NotNull private UUID id;
+  @NotNull private String title;
   private String description;
   private String location;
-  private ZonedDateTime eventStart;
-  private ZonedDateTime eventEnd;
-  private AccountPublicResponse createdBy;
+  @NotNull private ZonedDateTime eventStart;
+  @NotNull private ZonedDateTime eventEnd;
+  @NotNull private AccountPublicResponse createdBy;
 }

@@ -1,5 +1,7 @@
 package app.hivenote.event.dto.request;
 
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import java.time.ZonedDateTime;
 import lombok.*;
 
@@ -10,9 +12,9 @@ import lombok.*;
 @ToString
 @EqualsAndHashCode
 public class EventCreateRequest {
-  private String title;
+  @NotEmpty private String title;
   private String description;
   private String location;
-  private ZonedDateTime eventStart;
-  private ZonedDateTime eventEnd;
+  @NotNull private ZonedDateTime eventStart;
+  @NotNull private ZonedDateTime eventEnd;
 }

@@ -9,6 +9,7 @@ import app.hivenote.event.mapper.EventMapper;
 import app.hivenote.utils.ListUtil;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.transaction.Transactional;
+import jakarta.validation.Valid;
 import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.UUID;
@@ -52,13 +53,15 @@ public class EventController {
   }
 
   @PostMapping
-  public EventResponse create(EventCreateRequest request, AuthenticatedProfile profile) {
+  public EventResponse create(
+      @RequestBody @Valid EventCreateRequest request, AuthenticatedProfile profile) {
     EventEntity event = eventService.create(request, profile.getId());
     return EventMapper.toResponse(event);
   }
 
   @PutMapping
-  public EventResponse update(EventUpdateRequest request, AuthenticatedProfile profile) {
+  public EventResponse update(
+      @RequestBody @Valid EventUpdateRequest request, AuthenticatedProfile profile) {
     EventEntity event = eventService.update(request, profile.getId());
     return EventMapper.toResponse(event);
   }
