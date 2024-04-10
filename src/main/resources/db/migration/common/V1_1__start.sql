@@ -74,6 +74,7 @@ CREATE TABLE component
 (
     id         uuid PRIMARY KEY DEFAULT gen_random_uuid(),
     type       text  NOT NULL,
+    "order"    int   NOT NULL,
     properties jsonb NOT NULL,
     parent_id  uuid,
     note_id    uuid,
@@ -88,6 +89,7 @@ CREATE TABLE event
     id          uuid PRIMARY KEY DEFAULT gen_random_uuid(),
     title       text,
     description text,
+    location    text,
     event_start timestamp with time zone,
     event_end   timestamp with time zone,
     account_id  uuid,

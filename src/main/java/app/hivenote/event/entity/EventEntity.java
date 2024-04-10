@@ -16,6 +16,7 @@ public class EventEntity {
 
   private String title;
   private String description;
+  private String location;
 
   @Column(name = "event_start")
   private ZonedDateTime eventStart;
@@ -54,6 +55,15 @@ public class EventEntity {
     return this;
   }
 
+  public String getLocation() {
+    return location;
+  }
+
+  public EventEntity setLocation(String location) {
+    this.location = location;
+    return this;
+  }
+
   public ZonedDateTime getEventStart() {
     return eventStart;
   }
@@ -89,6 +99,7 @@ public class EventEntity {
     return getId().equals(that.getId())
         && getTitle().equals(that.getTitle())
         && getDescription().equals(that.getDescription())
+        && getLocation().equals(that.getLocation())
         && getEventStart().equals(that.getEventStart())
         && getEventEnd().equals(that.getEventEnd())
         && getCreatedBy().equals(that.getCreatedBy());
@@ -97,6 +108,12 @@ public class EventEntity {
   @Override
   public int hashCode() {
     return Objects.hash(
-        getId(), getTitle(), getDescription(), getEventStart(), getEventEnd(), getCreatedBy());
+        getId(),
+        getTitle(),
+        getDescription(),
+        getLocation(),
+        getEventStart(),
+        getEventEnd(),
+        getCreatedBy());
   }
 }
