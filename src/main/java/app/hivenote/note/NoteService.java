@@ -1,25 +1,28 @@
 package app.hivenote.note;
 
 import app.hivenote.account.entity.AccountEntity;
+import app.hivenote.component.ComponentService;
+import app.hivenote.component.entity.ComponentEntity;
 import app.hivenote.exception.ApiException;
 import app.hivenote.note.dto.request.NoteCreateRequest;
 import app.hivenote.note.dto.request.NoteUpdateRequest;
 import app.hivenote.note.entity.NoteAccessEntity;
 import app.hivenote.note.entity.NoteAccessType;
 import app.hivenote.note.entity.NoteEntity;
+import app.hivenote.socket.messages.NoteMessage;
 import java.util.List;
 import java.util.UUID;
-
-import app.hivenote.socket.messages.NoteMessage;
 import org.springframework.stereotype.Service;
 
 @Service
 public class NoteService {
   private final NoteRepository noteRepository;
+  private final ComponentService componentService;
   private final String ERROR_PREFIX = "err.note.";
 
-  public NoteService(NoteRepository noteRepository) {
+  public NoteService(NoteRepository noteRepository, ComponentService componentService) {
     this.noteRepository = noteRepository;
+    this.componentService = componentService;
   }
 
   public NoteEntity findById(UUID id) {
@@ -40,11 +43,6 @@ public class NoteService {
         .orElseThrow(() -> ApiException.notFound(ERROR_PREFIX + "notFound"));
   }
 
-  public List<NoteEntity> findByAccountAccessAndAccountId(
-      NoteAccessType accessType, UUID accountId) {
-    return noteRepository.findByAccountAccessAndAccountId(accessType, accountId);
-  }
-
   public List<NoteEntity> findRootByAccountAccessAndAccountId(
       NoteAccessType accessType, UUID accountId) {
     return noteRepository.findRootByAccountAccessAndAccountId(accessType, accountId);
@@ -54,8 +52,11 @@ public class NoteService {
     NoteEntity noteEntity = findById(UUID.fromString(noteMessage.getId()));
     noteEntity.setTitle(noteMessage.getTitle());
     noteEntity.setCoverUrl(noteMessage.getCoverUrl());
+    List<ComponentEntity> components = componentService.saveComponentsFromNoteMessage(noteMessage);
 
-    noteRepository.save(noteEntity);
+    noteEntity.setComponents(components);
+
+    NoteEntity savedEntity = noteRepository.save(noteEntity);
   }
 
   public NoteEntity create(NoteCreateRequest request, UUID accountId) {

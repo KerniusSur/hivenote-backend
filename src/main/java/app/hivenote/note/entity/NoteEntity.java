@@ -9,6 +9,7 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "note")
+@Cacheable
 public class NoteEntity {
 
   @Id
@@ -23,8 +24,8 @@ public class NoteEntity {
   @OneToMany(
       mappedBy = "note",
       cascade = CascadeType.ALL,
-      orphanRemoval = true,
-      fetch = FetchType.EAGER)
+      fetch = FetchType.EAGER,
+      orphanRemoval = true)
   private List<ComponentEntity> components;
 
   @OneToMany(mappedBy = "note", cascade = CascadeType.ALL, orphanRemoval = true)
