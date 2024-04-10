@@ -8,8 +8,8 @@ import lombok.*;
 @Getter
 @Setter
 @ToString
+@EqualsAndHashCode
 public class Message {
   private MessageType type;
   private String room;
-  //  private LocalDateTime createdAt = LocalDateTime.now();
 }

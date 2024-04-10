@@ -1,6 +1,5 @@
 package app.hivenote.socket;
 
-import app.hivenote.component.ComponentService;
 import app.hivenote.note.NoteService;
 import app.hivenote.note.entity.NoteEntity;
 import app.hivenote.note.mapper.NoteMapper;
@@ -16,7 +15,6 @@ import com.corundumstudio.socketio.listener.ConnectListener;
 import com.corundumstudio.socketio.listener.DataListener;
 import com.corundumstudio.socketio.listener.DisconnectListener;
 import java.util.UUID;
-import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
@@ -25,17 +23,11 @@ import org.springframework.stereotype.Component;
 public class SocketModule {
   private final SocketIOServer server;
   private final SocketService socketService;
-  private final ComponentService componentService;
   private final NoteService noteService;
 
-  public SocketModule(
-      SocketIOServer server,
-      SocketService socketService,
-      ComponentService componentService,
-      NoteService noteService) {
+  public SocketModule(SocketIOServer server, SocketService socketService, NoteService noteService) {
     this.server = server;
     this.socketService = socketService;
-    this.componentService = componentService;
     this.noteService = noteService;
 
     server.addConnectListener(onConnected());
@@ -51,12 +43,18 @@ public class SocketModule {
   private DataListener<NoteMessage> onNoteMessageReceived() {
     return (senderClient, data, ackSender) -> {
       String room = socketService.getRoom(senderClient, data);
+      log.info("Room: {}", room);
       if (room == null) {
         ackSender.sendAckData(false);
         return;
       }
 
-      socketService.sendMessage(room, NoteEvents.RETURN_NOTE, senderClient, data);
+      noteService.saveFromSocket(data);
+      log.info("Note saved");
+
+      socketService.sendNoteToOthers(room, NoteEvents.RETURN_NOTE, senderClient, data);
+      // TODO: Delete this later, only for testing purposes
+      socketService.sendNoteToOrigin(room, NoteEvents.RETURN_NOTE, senderClient, data);
       ackSender.sendAckData(true);
     };
   }
@@ -64,8 +62,13 @@ public class SocketModule {
   private DataListener<RoomMessage> onRoomMessageReceived() {
     return (senderClient, data, ackSender) -> {
       String room = data.getRoom();
+      log.info(
+          "Room request received from client[{}] for room[{}],  isJoining[{}]",
+          senderClient.getSessionId(),
+          room,
+          data.getIsJoining());
 
-      if (data.isJoining()) {
+      if (data.getIsJoining()) {
         senderClient.joinRoom(room);
         ackSender.sendAckData(true);
       } else {
@@ -99,7 +102,7 @@ public class SocketModule {
         return;
       }
 
-      socketService.sendNote(room, NoteEvents.RETURN_NOTE, senderClient, message);
+      socketService.sendNoteToOrigin(room, NoteEvents.RETURN_NOTE, senderClient, message);
       ackSender.sendAckData(message);
     };
   }
@@ -107,6 +110,7 @@ public class SocketModule {
   private ConnectListener onConnected() {
     return (client) -> {
       log.info("Socket ID[{}]  Connected to socket", client.getSessionId().toString());
+      log.info("Server configuration [{}]", server.getConfiguration());
     };
   }
 

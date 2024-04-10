@@ -8,6 +8,7 @@ import lombok.*;
 @Getter
 @Setter
 @ToString
+@EqualsAndHashCode(callSuper = false)
 public class CommentMessage extends Message {
   private String id;
   private String body;

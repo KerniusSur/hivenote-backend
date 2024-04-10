@@ -9,6 +9,6 @@ import lombok.*;
 @ToString
 @EqualsAndHashCode
 public class RoomMessage {
-  private boolean isJoining;
+  private Boolean isJoining;
   private String room;
 }
