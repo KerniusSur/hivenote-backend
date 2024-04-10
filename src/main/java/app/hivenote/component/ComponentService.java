@@ -4,19 +4,25 @@ import app.hivenote.component.dto.request.ComponentCreateRequest;
 import app.hivenote.component.dto.request.ComponentUpdateRequest;
 import app.hivenote.component.entity.ComponentEntity;
 import app.hivenote.exception.ApiException;
+import app.hivenote.note.NoteRepository;
 import app.hivenote.note.entity.NoteEntity;
+import app.hivenote.socket.messages.NoteMessage;
 import jakarta.transaction.Transactional;
 import java.util.List;
 import java.util.UUID;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+@Slf4j
 @Service
 @Transactional
 public class ComponentService {
   private final ComponentRepository componentRepository;
+  private final NoteRepository noteRepository;
 
-  public ComponentService(ComponentRepository componentRepository) {
+  public ComponentService(ComponentRepository componentRepository, NoteRepository noteRepository) {
     this.componentRepository = componentRepository;
+    this.noteRepository = noteRepository;
   }
 
   public ComponentEntity findById(UUID id) {
@@ -43,6 +49,34 @@ public class ComponentService {
     }
 
     return componentRepository.save(entity);
+  }
+
+  public List<ComponentEntity> saveComponentsFromNoteMessage(NoteMessage message) {
+    NoteEntity note =
+        noteRepository
+            .findById(UUID.fromString(message.getId()))
+            .orElseThrow(() -> ApiException.notFound("err.note.notFound"));
+
+    List<ComponentEntity> components =
+        message.getComponents().stream()
+            .map(
+                component -> {
+                  ComponentEntity entity = new ComponentEntity();
+                  entity.setType(component.getComponentType());
+                  entity.setProperties(component.getProperties());
+                  entity.setNote(note);
+                  try {
+                    UUID id = UUID.fromString(component.getId());
+                    entity.setId(id);
+                  } catch (Exception ignored) {
+                  }
+
+                  return entity;
+                })
+            .toList();
+
+    log.info("Saving components: {}", components);
+    return componentRepository.saveAll(components);
   }
 
   public ComponentEntity update(ComponentUpdateRequest request) {
