@@ -1,4 +1,9 @@
 spring:
+  devtools:
+    restart:
+      enabled: false
+      poll-interval: 5s
+      quiet-period: 4s
   datasource:
     url: jdbc:postgresql://localhost:5433/hivenote-db
     username: ${APP_DATABASE_USERNAME:postgres}
@@ -30,5 +35,7 @@ app:
     expirationMs: 172800000 # 2 days
 socket:
   server:
-    host: 192.168.0.173
+    #    host: 192.168.0.173
+    host: localhost
+    #    host: 192.168.64.1
     port: 9092

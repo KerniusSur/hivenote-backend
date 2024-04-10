@@ -3,6 +3,9 @@ spring:
     url: jdbc:postgresql://hivenote-db:5432/hivenote-db
   flyway:
     locations: classpath:db/migration/common,classpath:db/migration/prod
+  devtools:
+    restart:
+      enabled: false
 
 app:
   BASE_URL: https://hivenote.lol
