@@ -10,6 +10,7 @@ import org.hibernate.type.SqlTypes;
 
 @Entity
 @Table(name = "component")
+@Cacheable
 public class ComponentEntity {
   @Id
   @GeneratedValue(strategy = GenerationType.UUID)
@@ -18,6 +19,8 @@ public class ComponentEntity {
   @Enumerated(EnumType.STRING)
   private ComponentType type;
 
+  private Integer order;
+
   @JdbcTypeCode(SqlTypes.JSON)
   private ComponentProperties properties;
 
@@ -25,7 +28,8 @@ public class ComponentEntity {
   @JoinColumn(name = "parent_id", referencedColumnName = "id")
   private ComponentEntity parent;
 
-  @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL, orphanRemoval = true)
+  // TODO: removed orphanRemoval = true, add if needed
+  @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL)
   private List<ComponentEntity> children;
 
   @ManyToOne(fetch = FetchType.LAZY)
@@ -47,6 +51,15 @@ public class ComponentEntity {
 
   public ComponentEntity setType(ComponentType type) {
     this.type = type;
+    return this;
+  }
+
+  public Integer getOrder() {
+    return order;
+  }
+
+  public ComponentEntity setOrder(Integer order) {
+    this.order = order;
     return this;
   }
 

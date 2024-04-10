@@ -15,6 +15,7 @@ import lombok.*;
 public class ComponentResponse {
   private UUID id;
   private ComponentType type;
+  private Integer order;
   private ComponentProperties properties;
   private ComponentResponse parent;
   private List<ComponentResponse> children;

@@ -10,8 +10,10 @@ import lombok.*;
 @Getter
 @Setter
 @ToString
+@EqualsAndHashCode(callSuper = false)
 public class ComponentMessage extends Message {
   private String id;
+  @NotNull private Integer order;
   @NotNull private ComponentType componentType;
   @NotNull private ComponentProperties properties;
 }
