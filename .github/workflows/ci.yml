@@ -17,9 +17,9 @@ env:
 
 on:
   push:
-    branches: [master]
+    branches: [ master ]
   pull_request:
-    branches: [master]
+    branches: [ master ]
   workflow_dispatch:
 
 jobs:
@@ -64,37 +64,37 @@ jobs:
           sh publish.sh
 
       - uses: Burnett01/rsync-deployments@5.2
-          name: Add start.sh script to remote
-          with:
-            switches: -av --progress
-            path: start.sh
-            remote_path: ~/start.sh
-            remote_host: ${{env.REMOTE_HOST}}
-            remote_user: ${{env.REMOTE_USERNAME}}
-            remote_port: ${{env.REMOTE_PORT}}
-            remote_key: ${{env.REMOTE_PRIVATE_KEY}}
-            remote_key_pass: ${{env.REMOTE_PASSPHRASE}}
+        name: Add start.sh script to remote
+        with:
+          switches: -av --progress
+          path: start.sh
+          remote_path: ~/start.sh
+          remote_host: ${{env.REMOTE_HOST}}
+          remote_user: ${{env.REMOTE_USERNAME}}
+          remote_port: ${{env.REMOTE_PORT}}
+          remote_key: ${{env.REMOTE_PRIVATE_KEY}}
+          remote_key_pass: ${{env.REMOTE_PASSPHRASE}}
 
       - uses: Burnett01/rsync-deployments@5.2
-          name: Add docker-compose.yml to remote
-          with:
-            switches: -av --progress
-            path: docker-compose.yml
-            remote_path: ~/docker-compose.yml
-            remote_host: ${{env.REMOTE_HOST}}
-            remote_user: ${{env.REMOTE_USERNAME}}
-            remote_port: ${{env.REMOTE_PORT}}
-            remote_key: ${{env.REMOTE_PRIVATE_KEY}}
-            remote_key_pass: ${{env.REMOTE_PASSPHRASE}}
+        name: Add docker-compose.yml to remote
+        with:
+          switches: -av --progress
+          path: docker-compose.yml
+          remote_path: ~/docker-compose.yml
+          remote_host: ${{env.REMOTE_HOST}}
+          remote_user: ${{env.REMOTE_USERNAME}}
+          remote_port: ${{env.REMOTE_PORT}}
+          remote_key: ${{env.REMOTE_PRIVATE_KEY}}
+          remote_key_pass: ${{env.REMOTE_PASSPHRASE}}
 
       - name: Rebuild and start docker containers
-          uses: appleboy/ssh-action@master
-          with:
-            host: ${{env.REMOTE_HOST}}
-            username: ${{env.REMOTE_USERNAME}}
-            port: ${{env.REMOTE_PORT}}
-            key: ${{env.REMOTE_PRIVATE_KEY}}
-            passphrase: ${{env.REMOTE_PASSPHRASE}}
-            script_stop: true
-            script: |
-              sh start.sh
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{env.REMOTE_HOST}}
+          username: ${{env.REMOTE_USERNAME}}
+          port: ${{env.REMOTE_PORT}}
+          key: ${{env.REMOTE_PRIVATE_KEY}}
+          passphrase: ${{env.REMOTE_PASSPHRASE}}
+          script_stop: true
+          script: |
+            sh start.sh
