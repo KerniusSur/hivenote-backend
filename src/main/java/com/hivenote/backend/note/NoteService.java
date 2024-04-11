@@ -6,12 +6,12 @@ import com.hivenote.backend.account.entity.AccountEntity;
 import com.hivenote.backend.component.ComponentService;
 import com.hivenote.backend.component.entity.ComponentEntity;
 import com.hivenote.backend.exception.ApiException;
+import com.hivenote.backend.note.dto.request.NoteCreateRequest;
+import com.hivenote.backend.note.dto.request.NoteUpdateRequest;
 import com.hivenote.backend.note.entity.NoteAccessEntity;
 import com.hivenote.backend.note.entity.NoteAccessType;
 import com.hivenote.backend.note.entity.NoteEntity;
 import com.hivenote.backend.socket.messages.NoteMessage;
-import com.hivenote.backend.note.dto.request.NoteCreateRequest;
-import com.hivenote.backend.note.dto.request.NoteUpdateRequest;
 import com.hivenote.backend.utils.SpecificationUtil;
 import io.micrometer.common.lang.Nullable;
 import jakarta.persistence.AccessType;
@@ -19,11 +19,9 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 @Service
-@Slf4j
 public class NoteService {
   private final NoteRepository noteRepository;
   private final ComponentService componentService;
@@ -73,8 +71,7 @@ public class NoteService {
         .setCoverUrl(noteMessage.getCoverUrl())
         .setComponents(components);
 
-    NoteEntity savedEntity = noteRepository.save(noteEntity);
-    log.info("Note saved: {}", savedEntity);
+     noteRepository.save(noteEntity);
   }
 
   public NoteEntity create(NoteCreateRequest request, UUID accountId) {
