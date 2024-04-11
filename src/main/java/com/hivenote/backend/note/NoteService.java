@@ -56,7 +56,7 @@ public class NoteService {
   }
 
   public List<NoteEntity> findRootByAccountAccessAndAccountId(
-          NoteAccessType accessType, UUID accountId) {
+      NoteAccessType accessType, UUID accountId) {
     return noteRepository.findRootByAccountAccessAndAccountId(accessType, accountId);
   }
 
@@ -66,12 +66,13 @@ public class NoteService {
         new ArrayList<>(componentService.saveComponentsFromNoteMessage(noteMessage));
     components.sort(Comparator.comparing(ComponentEntity::getPriority));
 
-    noteEntity
-        .setTitle(noteMessage.getTitle())
-        .setCoverUrl(noteMessage.getCoverUrl())
-        .setComponents(components);
+    noteEntity.setCoverUrl(noteMessage.getCoverUrl()).setComponents(components);
 
-     noteRepository.save(noteEntity);
+    if (noteMessage.getTitle() != null) {
+      noteEntity.setTitle(noteMessage.getTitle());
+    }
+
+    noteRepository.save(noteEntity);
   }
 
   public NoteEntity create(NoteCreateRequest request, UUID accountId) {
