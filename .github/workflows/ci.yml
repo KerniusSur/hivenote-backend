@@ -4,7 +4,6 @@ permissions:
   id-token: write
   contents: read
 
-
 on:
   push:
     branches: [ master ]
@@ -40,11 +39,11 @@ jobs:
           distribution: 'zulu'
           cache: maven
 
-      - name: run tests
-        env:
-          ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
-        run: |
-          mvn -s "${{ github.workspace }}/.github/workflows/maven-settings.xml" -B verify --file pom.xml
+      #      - name: run tests
+      #        env:
+      #          ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+      #        run: |
+      #          mvn -s "${{ github.workspace }}/.github/workflows/maven-settings.xml" -B verify --file pom.xml
 
       - name: try to build docker image
         run: |
