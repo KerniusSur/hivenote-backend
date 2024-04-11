@@ -8,11 +8,16 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="jarsh-service" />
+        <module name="backend-hivenote" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="jarsh-service" target="18" />
+    </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="backend-hivenote" options="-parameters" />
       <module name="jarsh-service" options="-parameters" />
     </option>
   </component>

@@ -1,0 +1,35 @@
+version: '3.1'
+
+services:
+  hivenote-frontend:
+    image: kernius/hivenote-frontend
+    container_name: hivenote-frontend
+    hostname: hivenote-frontend
+    depends_on:
+      - hivenote-backend
+    ports:
+      - "80:80"
+      - "443:443"
+
+  hivenote-backend:
+    image: kernius/hivenote-backend
+    container_name: hivenote-backend
+    hostname: hivenote-backend
+    depends_on:
+      - finance-db
+    ports:
+      - "8080:8080"
+      - "9092:9092"
+
+  hivenote-db:
+    image: postgres
+    hostname: hivenote-db
+    container_name: hivenote-db
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: hivenote-db
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./postgres-data:/var/lib/postgresql/data
