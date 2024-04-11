@@ -53,8 +53,6 @@ public class SocketModule {
       log.info("Note saved");
 
       socketService.sendNoteToOthers(room, NoteEvents.RETURN_NOTE, senderClient, data);
-      // TODO: Delete this later, only for testing purposes
-      socketService.sendNoteToOrigin(room, NoteEvents.RETURN_NOTE, senderClient, data);
       ackSender.sendAckData(true);
     };
   }

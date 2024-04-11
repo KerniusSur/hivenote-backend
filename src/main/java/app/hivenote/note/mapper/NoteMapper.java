@@ -4,11 +4,13 @@ import app.hivenote.account.dto.response.AccountPublicResponse;
 import app.hivenote.account.mapper.AccountMapper;
 import app.hivenote.comment.mapper.CommentMapper;
 import app.hivenote.component.mapper.ComponentMapper;
-import app.hivenote.note.dto.response.NoteMinResponse;
 import app.hivenote.note.dto.response.NoteResponse;
 import app.hivenote.note.entity.NoteEntity;
+import app.hivenote.socket.messages.ComponentMessage;
 import app.hivenote.socket.messages.NoteMessage;
 import app.hivenote.utils.ListUtil;
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -31,10 +33,6 @@ public class NoteMapper {
       response.setComments(ListUtil.map(note.getComments(), CommentMapper::toResponse));
     }
 
-    //    if (note.getParent() != null) {
-    //      response.setParent(toResponse(note.getParent()));
-    //    }
-
     if (note.getChildren() != null) {
       response.setChildren(ListUtil.map(note.getChildren(), NoteMapper::toResponse));
     }
@@ -48,16 +46,16 @@ public class NoteMapper {
         .collect(Collectors.toList());
   }
 
-  public static NoteMinResponse toMinResponse(NoteEntity note) {
-    return new NoteMinResponse().setId(note.getId()).setTitle(note.getTitle());
-  }
-
   public static NoteMessage toMessage(NoteEntity note) {
+    List<ComponentMessage> components =
+        new ArrayList<>(ListUtil.map(note.getComponents(), ComponentMapper::toMessage));
+    components.sort(Comparator.comparingInt(ComponentMessage::getPriority));
+
     return new NoteMessage()
         .setId(note.getId().toString())
         .setTitle(note.getTitle())
         .setCoverUrl(note.getCoverUrl())
-        .setComponents(ListUtil.map(note.getComponents(), ComponentMapper::toMessage))
+        .setComponents(components)
         .setComments(ListUtil.map(note.getComments(), CommentMapper::toMessage));
   }
 }

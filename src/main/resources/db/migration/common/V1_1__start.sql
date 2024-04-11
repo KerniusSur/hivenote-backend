@@ -74,7 +74,7 @@ CREATE TABLE component
 (
     id         uuid PRIMARY KEY DEFAULT gen_random_uuid(),
     type       text  NOT NULL,
-    "order"    int   NOT NULL,
+    priority   int   NOT NULL,
     properties jsonb NOT NULL,
     parent_id  uuid,
     note_id    uuid,

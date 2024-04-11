@@ -13,7 +13,7 @@ import lombok.*;
 @EqualsAndHashCode(callSuper = false)
 public class ComponentMessage extends Message {
   private String id;
-  @NotNull private Integer order;
+  private Integer priority;
   @NotNull private ComponentType componentType;
   @NotNull private ComponentProperties properties;
 }

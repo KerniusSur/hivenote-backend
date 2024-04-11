@@ -15,11 +15,15 @@ import app.hivenote.socket.messages.NoteMessage;
 import app.hivenote.utils.SpecificationUtil;
 import io.micrometer.common.lang.Nullable;
 import jakarta.persistence.AccessType;
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 @Service
+@Slf4j
 public class NoteService {
   private final NoteRepository noteRepository;
   private final ComponentService componentService;
@@ -33,12 +37,6 @@ public class NoteService {
   public NoteEntity findById(UUID id) {
     return noteRepository
         .findById(id)
-        .orElseThrow(() -> ApiException.notFound(ERROR_PREFIX + "notFound"));
-  }
-
-  public NoteEntity findByIdAndIsDeleted(UUID id, Boolean isDeleted) {
-    return noteRepository
-        .findByIdAndIsDeleted(id, isDeleted)
         .orElseThrow(() -> ApiException.notFound(ERROR_PREFIX + "notFound"));
   }
 
@@ -66,13 +64,17 @@ public class NoteService {
 
   public void saveFromSocket(NoteMessage noteMessage) {
     NoteEntity noteEntity = findById(UUID.fromString(noteMessage.getId()));
-    noteEntity.setTitle(noteMessage.getTitle());
-    noteEntity.setCoverUrl(noteMessage.getCoverUrl());
-    List<ComponentEntity> components = componentService.saveComponentsFromNoteMessage(noteMessage);
+    List<ComponentEntity> components =
+        new ArrayList<>(componentService.saveComponentsFromNoteMessage(noteMessage));
+    components.sort(Comparator.comparing(ComponentEntity::getPriority));
 
-    noteEntity.setComponents(components);
+    noteEntity
+        .setTitle(noteMessage.getTitle())
+        .setCoverUrl(noteMessage.getCoverUrl())
+        .setComponents(components);
 
     NoteEntity savedEntity = noteRepository.save(noteEntity);
+    log.info("Note saved: {}", savedEntity);
   }
 
   public NoteEntity create(NoteCreateRequest request, UUID accountId) {
@@ -110,11 +112,6 @@ public class NoteService {
                     .setNote(noteEntity)
                     .setAccount(new AccountEntity().setId(accountId))
                     .setAccessType(NoteAccessType.OWNER));
-
-    for (NoteAccessEntity access : noteAccessEntities) {
-      System.out.println("ID --->" + access.getAccount().getId());
-      System.out.println("ACCESS --->" + access.getAccessType());
-    }
 
     noteEntity.getAccountAccess().addAll(noteAccessEntities);
     return noteRepository.save(noteEntity);

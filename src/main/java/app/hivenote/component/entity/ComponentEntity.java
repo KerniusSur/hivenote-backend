@@ -19,7 +19,7 @@ public class ComponentEntity {
   @Enumerated(EnumType.STRING)
   private ComponentType type;
 
-  private Integer order;
+  private Integer priority;
 
   @JdbcTypeCode(SqlTypes.JSON)
   private ComponentProperties properties;
@@ -54,12 +54,12 @@ public class ComponentEntity {
     return this;
   }
 
-  public Integer getOrder() {
-    return order;
+  public Integer getPriority() {
+    return priority;
   }
 
-  public ComponentEntity setOrder(Integer order) {
-    this.order = order;
+  public ComponentEntity setPriority(Integer priority) {
+    this.priority = priority;
     return this;
   }
 
@@ -106,6 +106,7 @@ public class ComponentEntity {
     ComponentEntity that = (ComponentEntity) o;
     return getId().equals(that.getId())
         && getType() == that.getType()
+        && getPriority().equals(that.getPriority())
         && getProperties().equals(that.getProperties())
         && getParent().equals(that.getParent())
         && getChildren().equals(that.getChildren())
@@ -114,6 +115,7 @@ public class ComponentEntity {
 
   @Override
   public int hashCode() {
-    return Objects.hash(getId(), getType(), getProperties(), getParent(), getChildren(), getNote());
+    return Objects.hash(
+        getId(), getType(), getPriority(), getProperties(), getParent(), getChildren(), getNote());
   }
 }

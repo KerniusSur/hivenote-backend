@@ -8,7 +8,6 @@ import app.hivenote.note.entity.NoteAccessType;
 import app.hivenote.note.entity.NoteEntity;
 import app.hivenote.note.mapper.NoteMapper;
 import app.hivenote.utils.ListUtil;
-import io.micrometer.common.lang.Nullable;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.persistence.AccessType;
 import jakarta.transaction.Transactional;
@@ -52,10 +51,10 @@ public class NoteController {
 
   @GetMapping("/filter")
   public List<NoteResponse> findAllFilteredBy(
-      @Nullable AccessType accessType,
-      @Nullable String searchString,
-      @Nullable Boolean isArchived,
-      @Nullable Boolean isDeleted,
+      @RequestParam(required = false, name = "accessType") AccessType accessType,
+      @RequestParam(required = false, name = "searchString") String searchString,
+      @RequestParam(required = false, name = "isArchived") Boolean isArchived,
+      @RequestParam(required = false, name = "isDeleted") Boolean isDeleted,
       AuthenticatedProfile profile) {
     return ListUtil.map(
         noteService.findAllFilteredBy(

@@ -40,11 +40,11 @@ public class EventController {
 
   @GetMapping("/filter")
   public List<EventResponse> findAllUserEventsFilteredBy(
-      @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+      @RequestParam(required = false, name = "dateFrom") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
           ZonedDateTime dateFrom,
-      @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+      @RequestParam(required = false, name = "dateTo") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
           ZonedDateTime dateTo,
-      @RequestParam(required = false) String searchString,
+      @RequestParam(required = false, name = "searchString") String searchString,
       AuthenticatedProfile profile) {
 
     return ListUtil.map(

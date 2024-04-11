@@ -10,7 +10,7 @@ public class ComponentMapper {
     return new ComponentResponse()
         .setId(component.getId())
         .setType(component.getType())
-        .setOrder(component.getOrder())
+        .setPriority(component.getPriority())
         .setProperties(component.getProperties())
         .setParent(
             component.getParent() == null
@@ -28,7 +28,7 @@ public class ComponentMapper {
     return new ComponentMessage()
         .setId(component.getId().toString())
         .setComponentType(component.getType())
-        .setOrder(component.getOrder())
+        .setPriority(component.getPriority())
         .setProperties(component.getProperties());
   }
 }
