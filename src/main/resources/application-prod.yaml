@@ -8,9 +8,10 @@ spring:
       enabled: false
 
 app:
-  BASE_URL: https://hivenote.lol
+  BASE_URL: https://hivenote.xyz
 
 socket:
   server:
     host: hivenote-backend
+#    host: hivenote.xyz
     port: 9092
