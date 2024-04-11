@@ -2,7 +2,7 @@ version: '3.1'
 
 services:
   hivenote-frontend:
-    image: kernius/hivenote-frontend
+    image: kerniussur/hivenote-frontend
     container_name: hivenote-frontend
     hostname: hivenote-frontend
     depends_on:
@@ -12,7 +12,7 @@ services:
       - "443:443"
 
   hivenote-backend:
-    image: kernius/hivenote-backend
+    image: kerniussur/hivenote-backend
     container_name: hivenote-backend
     hostname: hivenote-backend
     depends_on:
