@@ -1,12 +1,12 @@
 package com.hivenote.backend.component;
 
+import com.hivenote.backend.component.dto.request.ComponentCreateRequest;
+import com.hivenote.backend.component.dto.request.ComponentUpdateRequest;
 import com.hivenote.backend.component.entity.ComponentEntity;
 import com.hivenote.backend.exception.ApiException;
 import com.hivenote.backend.note.NoteRepository;
 import com.hivenote.backend.note.entity.NoteEntity;
 import com.hivenote.backend.socket.messages.NoteMessage;
-import com.hivenote.backend.component.dto.request.ComponentCreateRequest;
-import com.hivenote.backend.component.dto.request.ComponentUpdateRequest;
 import jakarta.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -93,8 +93,7 @@ public class ComponentService {
                 .toList());
 
     components.sort(Comparator.comparing(ComponentEntity::getPriority));
-
-    log.info("Saving components: {}", components);
+    
     return componentRepository.saveAll(components);
   }
 

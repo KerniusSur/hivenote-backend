@@ -13,5 +13,4 @@ app:
 socket:
   server:
     host: hivenote-backend
-#    host: hivenote.xyz
     port: 9092
