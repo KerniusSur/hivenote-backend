@@ -5,7 +5,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.2.4</version>
+        <version>3.2.5</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.hivenote</groupId>
@@ -192,7 +192,7 @@
         <dependency>
             <groupId>com.google.apis</groupId>
             <artifactId>google-api-services-calendar</artifactId>
-            <version>v3-rev20240111-2.0.0</version> <!-- Use the latest version compatible with google-api-client -->
+            <version>v3-rev20240328-2.0.0</version> <!-- Use the latest version compatible with google-api-client -->
             <!--            com.google.apis:google-api-services-calendar:v3-rev20220715-2.0.0-->
         </dependency>
 
