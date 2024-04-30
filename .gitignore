@@ -3,6 +3,9 @@ HELP.md
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/
+.env
+.DS_Store
+*/.DS_Store
 
 ### STS ###
 .apt_generated
@@ -18,6 +21,7 @@ HELP.md
 *.iws
 *.iml
 *.ipr
+
 
 ### VS Code ###
 .vscode/
