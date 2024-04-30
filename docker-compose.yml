@@ -1,6 +1,6 @@
 services:
   hivenote-frontend:
-    image: 992382369361.dkr.ecr.eu-central-1.amazonaws.com/hivenote-frontend
+    image: 992382369361.dkr.ecr.eu-central-1.amazonaws.com/hivenote-frontend:latest
     container_name: hivenote-frontend
     hostname: hivenote-frontend
     depends_on:
@@ -12,7 +12,7 @@ services:
       - "443:443"
 
   hivenote-backend:
-    image: 992382369361.dkr.ecr.eu-central-1.amazonaws.com/hivenote-backend
+    image: 992382369361.dkr.ecr.eu-central-1.amazonaws.com/hivenote-backend:latest
     container_name: hivenote-backend
     hostname: hivenote-backend
     depends_on:
@@ -24,7 +24,7 @@ services:
       - .prod.env
 
   hivenote-db:
-    image: postgres
+    image: postgres:16
     hostname: hivenote-db
     container_name: hivenote-db
     environment:
