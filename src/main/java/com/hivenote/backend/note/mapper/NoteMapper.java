@@ -2,14 +2,15 @@ package com.hivenote.backend.note.mapper;
 
 import com.hivenote.backend.account.dto.response.AccountPublicResponse;
 import com.hivenote.backend.account.mapper.AccountMapper;
+import com.hivenote.backend.comment.mapper.CommentMapper;
+import com.hivenote.backend.component.mapper.ComponentMapper;
+import com.hivenote.backend.note.dto.response.NoteAccessResponse;
 import com.hivenote.backend.note.dto.response.NoteResponse;
+import com.hivenote.backend.note.entity.NoteAccessEntity;
 import com.hivenote.backend.note.entity.NoteEntity;
 import com.hivenote.backend.socket.messages.ComponentMessage;
 import com.hivenote.backend.socket.messages.NoteMessage;
 import com.hivenote.backend.utils.ListUtil;
-import com.hivenote.backend.comment.mapper.CommentMapper;
-import com.hivenote.backend.component.mapper.ComponentMapper;
-
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -58,5 +59,12 @@ public class NoteMapper {
         .setCoverUrl(note.getCoverUrl())
         .setComponents(components)
         .setComments(ListUtil.map(note.getComments(), CommentMapper::toMessage));
+  }
+
+  public static NoteAccessResponse toNoteAccessResponse(NoteAccessEntity noteAccessEntity) {
+    return new NoteAccessResponse()
+        .setNoteId(noteAccessEntity.getNote().getId())
+        .setAccountId(noteAccessEntity.getAccount().getId())
+        .setAccessType(noteAccessEntity.getAccessType());
   }
 }

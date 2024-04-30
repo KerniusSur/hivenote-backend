@@ -1,15 +1,14 @@
 package com.hivenote.backend.note;
 
 import com.hivenote.backend.auth.entity.AuthenticatedProfile;
+import com.hivenote.backend.note.dto.request.NoteCreateRequest;
+import com.hivenote.backend.note.dto.request.NoteUpdateRequest;
 import com.hivenote.backend.note.dto.response.NoteResponse;
 import com.hivenote.backend.note.entity.NoteAccessType;
 import com.hivenote.backend.note.entity.NoteEntity;
-import com.hivenote.backend.note.dto.request.NoteCreateRequest;
-import com.hivenote.backend.note.dto.request.NoteUpdateRequest;
 import com.hivenote.backend.note.mapper.NoteMapper;
 import com.hivenote.backend.utils.ListUtil;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.persistence.AccessType;
 import jakarta.transaction.Transactional;
 import java.util.List;
 import java.util.UUID;
@@ -51,7 +50,7 @@ public class NoteController {
 
   @GetMapping("/filter")
   public List<NoteResponse> findAllFilteredBy(
-      @RequestParam(required = false, name = "accessType") AccessType accessType,
+      @RequestParam(required = false, name = "accessType") NoteAccessType accessType,
       @RequestParam(required = false, name = "searchString") String searchString,
       @RequestParam(required = false, name = "isArchived") Boolean isArchived,
       @RequestParam(required = false, name = "isDeleted") Boolean isDeleted,

@@ -1,76 +1,82 @@
 package com.hivenote.backend.note.specifications;
 
+import com.hivenote.backend.component.entity.ComponentEntity;
+import com.hivenote.backend.note.entity.NoteAccessType;
 import com.hivenote.backend.note.entity.NoteEntity;
-import io.micrometer.common.lang.Nullable;
-import jakarta.persistence.AccessType;
-import jakarta.persistence.criteria.CriteriaBuilder;
-import jakarta.persistence.criteria.CriteriaQuery;
-import jakarta.persistence.criteria.Root;
+import jakarta.persistence.criteria.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import org.springframework.data.jpa.domain.Specification;
 
 public class NoteSpecifications {
-  public static Specification<NoteEntity> hasAccountAccess(UUID accountId, AccessType accessType) {
-    return (Root<NoteEntity> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) -> {
-      query.distinct(true);
-      root.join("accountAccess");
-      root.join("accountAccess").join("account");
-
-      return criteriaBuilder.and(
-          criteriaBuilder.equal(root.get("accountAccess").get("account").get("id"), accountId),
-          criteriaBuilder.equal(root.get("accountAccess").get("accessType"), accessType));
-    };
+  public static Specification<NoteEntity> hasAccountId(UUID accountId) {
+    return (root, query, cb) ->
+        cb.equal(root.join("accountAccess").get("account").get("id"), accountId);
   }
 
-  public static Specification<NoteEntity> containsString(String searchString) {
-    return (Root<NoteEntity> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) -> {
-      query.distinct(true);
-      root.join("components");
-      root.join("components").join("properties");
+  public static Specification<NoteEntity> hasAccessType(NoteAccessType accessType) {
+    return (root, query, cb) -> cb.equal(root.join("accountAccess").get("accessType"), accessType);
+  }
+
+  public static Specification<NoteEntity> containsSearchString(String searchString) {
+    return (root, query, criteriaBuilder) -> {
+      Predicate notesTitlePredicate =
+          criteriaBuilder.like(
+              criteriaBuilder.lower(root.get("title")), "%" + searchString.toLowerCase() + "%");
+
+      Join<NoteEntity, ComponentEntity> componentsJoin = root.join("components", JoinType.LEFT);
+      Expression<String> componentTitleExpr =
+          criteriaBuilder.function(
+              "jsonb_extract_path_text",
+              String.class,
+              componentsJoin.get("properties"),
+              criteriaBuilder.literal("title"));
+      Expression<String> componentTextExpr =
+          criteriaBuilder.function(
+              "jsonb_extract_path_text",
+              String.class,
+              componentsJoin.get("properties"),
+              criteriaBuilder.literal("text"));
+
+      Predicate componentsTitlePredicate =
+          criteriaBuilder.like(
+              criteriaBuilder.lower(componentTitleExpr), "%" + searchString.toLowerCase() + "%");
+      Predicate componentsTextPredicate =
+          criteriaBuilder.like(
+              criteriaBuilder.lower(componentTextExpr), "%" + searchString.toLowerCase() + "%");
 
       return criteriaBuilder.or(
-          criteriaBuilder.like(
-              criteriaBuilder.lower(root.get("title")), "%" + searchString.toLowerCase() + "%"),
-          criteriaBuilder.like(
-              criteriaBuilder.lower(root.get("components").get("properties").get("text")),
-              "%" + searchString.toLowerCase() + "%"),
-          criteriaBuilder.like(
-              criteriaBuilder.lower(root.get("components").get("properties").get("title")),
-              "%" + searchString.toLowerCase() + "%"),
-          criteriaBuilder.like(
-              criteriaBuilder.lower(root.get("components").get("properties").get("message")),
-              "%" + searchString.toLowerCase() + "%"));
+          notesTitlePredicate, componentsTitlePredicate, componentsTextPredicate);
     };
   }
 
-  public static Specification<NoteEntity> isArchived(Boolean isArchived) {
-    return (Root<NoteEntity> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) -> {
-      return criteriaBuilder.equal(root.get("isArchived"), isArchived);
-    };
+  public static Specification<NoteEntity> isArchived(boolean isArchived) {
+    return (root, query, cb) -> cb.equal(root.get("isArchived"), isArchived);
   }
 
-  public static Specification<NoteEntity> isDeleted(Boolean isDeleted) {
-    return (Root<NoteEntity> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) -> {
-      return criteriaBuilder.equal(root.get("isDeleted"), isDeleted);
-    };
+  public static Specification<NoteEntity> isDeleted(boolean isDeleted) {
+    return (root, query, cb) -> cb.equal(root.get("isDeleted"), isDeleted);
   }
 
   public static List<Specification<NoteEntity>> getSpecifications(
-      @Nullable UUID accountId,
-      @Nullable AccessType accessType,
-      @Nullable String searchString,
-      @Nullable Boolean isArchived,
-      @Nullable Boolean isDeleted) {
+      UUID accountId,
+      NoteAccessType accessType,
+      String searchString,
+      Boolean isArchived,
+      Boolean isDeleted) {
     List<Specification<NoteEntity>> specifications = new ArrayList<>();
 
-    if (accountId != null && accessType != null) {
-      specifications.add(hasAccountAccess(accountId, accessType));
+    if (accountId != null) {
+      specifications.add(hasAccountId(accountId));
+    }
+
+    if (accessType != null) {
+      specifications.add(hasAccessType(accessType));
     }
 
     if (searchString != null) {
-      specifications.add(containsString(searchString));
+      specifications.add(containsSearchString(searchString));
     }
 
     if (isArchived != null) {

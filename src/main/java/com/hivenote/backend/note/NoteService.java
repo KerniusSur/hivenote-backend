@@ -2,6 +2,7 @@ package com.hivenote.backend.note;
 
 import static com.hivenote.backend.note.specifications.NoteSpecifications.getSpecifications;
 
+import com.hivenote.backend.account.AccountService;
 import com.hivenote.backend.account.entity.AccountEntity;
 import com.hivenote.backend.component.ComponentService;
 import com.hivenote.backend.component.entity.ComponentEntity;
@@ -14,7 +15,6 @@ import com.hivenote.backend.note.entity.NoteEntity;
 import com.hivenote.backend.socket.messages.NoteMessage;
 import com.hivenote.backend.utils.SpecificationUtil;
 import io.micrometer.common.lang.Nullable;
-import jakarta.persistence.AccessType;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -25,11 +25,16 @@ import org.springframework.stereotype.Service;
 public class NoteService {
   private final NoteRepository noteRepository;
   private final ComponentService componentService;
+  private final AccountService accountService;
   private final String ERROR_PREFIX = "err.note.";
 
-  public NoteService(NoteRepository noteRepository, ComponentService componentService) {
+  public NoteService(
+      NoteRepository noteRepository,
+      ComponentService componentService,
+      AccountService accountService) {
     this.noteRepository = noteRepository;
     this.componentService = componentService;
+    this.accountService = accountService;
   }
 
   public NoteEntity findById(UUID id) {
@@ -40,10 +45,11 @@ public class NoteService {
 
   public List<NoteEntity> findAllFilteredBy(
       @Nullable UUID accountId,
-      @Nullable AccessType accessType,
+      @Nullable NoteAccessType accessType,
       @Nullable String searchString,
       @Nullable Boolean isArchived,
       @Nullable Boolean isDeleted) {
+
     return noteRepository.findAll(
         SpecificationUtil.toANDSpecification(
             getSpecifications(accountId, accessType, searchString, isArchived, isDeleted)));
@@ -57,7 +63,9 @@ public class NoteService {
 
   public List<NoteEntity> findRootByAccountAccessAndAccountId(
       NoteAccessType accessType, UUID accountId) {
-    return noteRepository.findRootByAccountAccessAndAccountId(accessType, accountId);
+    return noteRepository.findAll(
+        SpecificationUtil.toANDSpecification(
+            getSpecifications(accountId, accessType, null, false, false)));
   }
 
   public void saveFromSocket(NoteMessage noteMessage) {
@@ -149,5 +157,53 @@ public class NoteService {
 
     noteEntity.setIsDeleted(true);
     noteRepository.save(noteEntity);
+  }
+
+  public boolean hasAccess(UUID noteId, UUID accountId, NoteAccessType accessType) {
+    return noteRepository.existsByAccountIdAndNoteIdAndAccessType(accountId, noteId, accessType);
+  }
+
+  public void shareNote(
+      UUID noteId, UUID accountId, NoteAccessType accessType, List<String> emails) {
+    NoteEntity noteEntity = findById(noteId);
+    List<AccountEntity> accountsToShare =
+        emails.stream().map(accountService::findByEmailOrNull).toList();
+
+    if (noteEntity.getAccountAccess().stream()
+        .noneMatch(
+            access ->
+                access.getAccount().getId().equals(accountId)
+                    && (access.getAccessType() == NoteAccessType.OWNER
+                        || access.getAccessType() == NoteAccessType.EDITOR))) {
+      throw ApiException.unauthorized(ERROR_PREFIX + "unauthorized");
+    }
+
+    List<NoteAccessEntity> noteAccessEntities =
+        accountsToShare.stream()
+            .map(
+                account ->
+                    new NoteAccessEntity()
+                        .setNote(noteEntity)
+                        .setAccount(account)
+                        .setAccessType(accessType))
+            .toList();
+
+    noteEntity.getAccountAccess().addAll(noteAccessEntities);
+    noteRepository.save(noteEntity);
+  }
+
+  public List<NoteAccessEntity> findNoteCollaborators(UUID noteId, UUID accountId) {
+    NoteEntity noteEntity = findById(noteId);
+
+    if (noteEntity.getAccountAccess().stream()
+        .noneMatch(
+            access ->
+                access.getAccount().getId().equals(accountId)
+                    && (access.getAccessType() == NoteAccessType.OWNER
+                        || access.getAccessType() == NoteAccessType.EDITOR))) {
+      throw ApiException.unauthorized(ERROR_PREFIX + "unauthorized");
+    }
+
+    return noteEntity.getAccountAccess();
   }
 }
