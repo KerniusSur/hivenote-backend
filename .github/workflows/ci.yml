@@ -112,10 +112,10 @@ jobs:
           remote_key_pass: ${{env.REMOTE_PASSPHRASE}}
 
       - uses: Burnett01/rsync-deployments@5.2
-        name: Add docker-compose.yml to VU remote
+        name: Add docker-compose-opennebula.yml to VU remote
         with:
           switches: -av --progress
-          path: docker-compose.yml
+          path: docker-compose-opennebula.yml
           remote_path: ~/docker-compose.yml
           remote_host: ${{env.VU_REMOTE_HOST}}
           remote_user: ${{env.VU_REMOTE_USERNAME}}

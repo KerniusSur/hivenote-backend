@@ -1,0 +1,36 @@
+services:
+  hivenote-frontend:
+    image: 992382369361.dkr.ecr.eu-central-1.amazonaws.com/hivenote-frontend-opennebula:latest
+    container_name: hivenote-frontend
+    hostname: hivenote-frontend
+    depends_on:
+      - hivenote-backend
+    volumes:
+      - /etc/nginx/nginx.conf:/etc/nginx/nginx.conf
+    ports:
+      - "80:80"
+
+  hivenote-backend:
+    image: 992382369361.dkr.ecr.eu-central-1.amazonaws.com/hivenote-backend:latest
+    container_name: hivenote-backend
+    hostname: hivenote-backend
+    depends_on:
+      - hivenote-db
+    ports:
+      - "8080:8080"
+      - "9092:9092"
+    env_file:
+      - .prod.env
+
+  hivenote-db:
+    image: postgres:16
+    hostname: hivenote-db
+    container_name: hivenote-db
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: hivenote-db
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./postgres-data:/var/lib/postgresql/data
