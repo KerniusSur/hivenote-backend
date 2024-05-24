@@ -5,12 +5,15 @@ import jakarta.persistence.*;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 
 @Entity
 @Table(name = "component")
 @Cacheable
+@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class ComponentEntity {
   @Id
   @GeneratedValue(strategy = GenerationType.UUID)

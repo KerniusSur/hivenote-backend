@@ -12,6 +12,7 @@ import lombok.*;
 @ToString
 @EqualsAndHashCode
 public class EventCreateRequest {
+  // TODO: Validate in BE as well
   @NotEmpty private String title;
   private String description;
   private String location;
