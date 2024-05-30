@@ -3,10 +3,10 @@ package com.hivenote.backend.event;
 import static com.hivenote.backend.event.specifications.EventSpecifications.getSpecifications;
 
 import com.hivenote.backend.account.entity.AccountEntity;
-import com.hivenote.backend.event.entity.EventEntity;
-import com.hivenote.backend.exception.ApiException;
 import com.hivenote.backend.event.dto.request.EventCreateRequest;
 import com.hivenote.backend.event.dto.request.EventUpdateRequest;
+import com.hivenote.backend.event.entity.EventEntity;
+import com.hivenote.backend.exception.ApiException;
 import com.hivenote.backend.utils.SpecificationUtil;
 import io.micrometer.common.lang.Nullable;
 import java.time.ZonedDateTime;
@@ -51,6 +51,10 @@ public class EventService {
   }
 
   public EventEntity create(EventCreateRequest request, UUID accountId) {
+    if (request.getEventStart().isAfter(request.getEventEnd())) {
+      throw ApiException.bad(ERROR_PREFIX + "invalidDates");
+    }
+
     return new EventEntity()
         .setTitle(request.getTitle())
         .setDescription(request.getDescription())

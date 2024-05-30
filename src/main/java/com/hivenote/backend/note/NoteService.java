@@ -9,6 +9,7 @@ import com.hivenote.backend.component.entity.ComponentEntity;
 import com.hivenote.backend.exception.ApiException;
 import com.hivenote.backend.note.dto.request.NoteCreateRequest;
 import com.hivenote.backend.note.dto.request.NoteUpdateRequest;
+import com.hivenote.backend.aws.dto.FileUploadResponse;
 import com.hivenote.backend.note.entity.NoteAccessEntity;
 import com.hivenote.backend.note.entity.NoteAccessType;
 import com.hivenote.backend.note.entity.NoteEntity;
@@ -20,6 +21,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 @Service
 public class NoteService {

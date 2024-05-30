@@ -19,9 +19,9 @@ spring:
             mode: ENABLE_SELECTIVE
       hibernate:
         ddl-auto: none
-        generate_statistics: true
+        generate_statistics: false
         cache:
-          use_second_level_cache: true
+          use_second_level_cache: false
           region:
             factory_class: org.hibernate.cache.ehcache.EhCacheRegionFactory
         types:

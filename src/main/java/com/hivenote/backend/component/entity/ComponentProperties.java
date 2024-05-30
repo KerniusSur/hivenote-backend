@@ -15,6 +15,7 @@ public class ComponentProperties implements Serializable {
   private String caption;
   private String html;
   private String link;
+  private String url;
 
   public String getTitle() {
     return title;
@@ -104,6 +105,15 @@ public class ComponentProperties implements Serializable {
 
   public ComponentProperties setLink(String link) {
     this.link = link;
+    return this;
+  }
+
+  public String getUrl() {
+    return url;
+  }
+
+  public ComponentProperties setUrl(String url) {
+    this.url = url;
     return this;
   }
 
