@@ -87,17 +87,17 @@ jobs:
           remote_key: ${{env.REMOTE_PRIVATE_KEY}}
           remote_key_pass: ${{env.REMOTE_PASSPHRASE}}
 
-      - uses: Burnett01/rsync-deployments@5.2
-        name: Add start.sh script to VU remote
-        with:
-          switches: -av --progress
-          path: start.sh
-          remote_path: ~/start.sh
-          remote_host: ${{env.VU_REMOTE_HOST}}
-          remote_user: ${{env.VU_REMOTE_USERNAME}}
-          remote_port: ${{env.VU_REMOTE_PORT}}
-          remote_key: ${{env.VU_REMOTE_PRIVATE_KEY}}
-          remote_key_pass: ${{env.VU_REMOTE_PASSPHRASE}}
+#      - uses: Burnett01/rsync-deployments@5.2
+#        name: Add start.sh script to VU remote
+#        with:
+#          switches: -av --progress
+#          path: start.sh
+#          remote_path: ~/start.sh
+#          remote_host: ${{env.VU_REMOTE_HOST}}
+#          remote_user: ${{env.VU_REMOTE_USERNAME}}
+#          remote_port: ${{env.VU_REMOTE_PORT}}
+#          remote_key: ${{env.VU_REMOTE_PRIVATE_KEY}}
+#          remote_key_pass: ${{env.VU_REMOTE_PASSPHRASE}}
 
       - uses: Burnett01/rsync-deployments@5.2
         name: Add docker-compose.yml to remote
@@ -111,17 +111,17 @@ jobs:
           remote_key: ${{env.REMOTE_PRIVATE_KEY}}
           remote_key_pass: ${{env.REMOTE_PASSPHRASE}}
 
-      - uses: Burnett01/rsync-deployments@5.2
-        name: Add docker-compose-opennebula.yml to VU remote
-        with:
-          switches: -av --progress
-          path: docker-compose-opennebula.yml
-          remote_path: ~/docker-compose.yml
-          remote_host: ${{env.VU_REMOTE_HOST}}
-          remote_user: ${{env.VU_REMOTE_USERNAME}}
-          remote_port: ${{env.VU_REMOTE_PORT}}
-          remote_key: ${{env.VU_REMOTE_PRIVATE_KEY}}
-          remote_key_pass: ${{env.VU_REMOTE_PASSPHRASE}}
+#      - uses: Burnett01/rsync-deployments@5.2
+#        name: Add docker-compose-opennebula.yml to VU remote
+#        with:
+#          switches: -av --progress
+#          path: docker-compose-opennebula.yml
+#          remote_path: ~/docker-compose.yml
+#          remote_host: ${{env.VU_REMOTE_HOST}}
+#          remote_user: ${{env.VU_REMOTE_USERNAME}}
+#          remote_port: ${{env.VU_REMOTE_PORT}}
+#          remote_key: ${{env.VU_REMOTE_PRIVATE_KEY}}
+#          remote_key_pass: ${{env.VU_REMOTE_PASSPHRASE}}
 
       - name: Rebuild and start docker containers
         uses: appleboy/ssh-action@master
@@ -135,14 +135,14 @@ jobs:
           script: |
             sh start.sh
         
-      - name: Rebuild and start docker containers 
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{env.VU_REMOTE_HOST}}
-          username: ${{env.VU_REMOTE_USERNAME}}
-          port: ${{env.VU_REMOTE_PORT}}
-          key: ${{env.VU_REMOTE_PRIVATE_KEY}}
-          passphrase: ${{env.VU_REMOTE_PASSPHRASE}}
-          script_stop: true
-          script: |
-            sh start.sh 
+#      - name: Rebuild and start docker containers
+#        uses: appleboy/ssh-action@master
+#        with:
+#          host: ${{env.VU_REMOTE_HOST}}
+#          username: ${{env.VU_REMOTE_USERNAME}}
+#          port: ${{env.VU_REMOTE_PORT}}
+#          key: ${{env.VU_REMOTE_PRIVATE_KEY}}
+#          passphrase: ${{env.VU_REMOTE_PASSPHRASE}}
+#          script_stop: true
+#          script: |
+#            sh start.sh
