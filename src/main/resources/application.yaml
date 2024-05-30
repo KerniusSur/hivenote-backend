@@ -11,12 +11,19 @@ spring:
   flyway:
     locations: classpath:db/migration/common,classpath:db/migration/dev
   jpa:
-    hibernate:
-      ddl-auto: none
     database: postgresql
     properties:
+      javax:
+        persistence:
+          sharedCache:
+            mode: ENABLE_SELECTIVE
       hibernate:
-        generate_statistics: false # analysing queries
+        ddl-auto: none
+        generate_statistics: false
+        cache:
+          use_second_level_cache: false
+          region:
+            factory_class: org.hibernate.cache.ehcache.EhCacheRegionFactory
         types:
           print:
             banner: false #Turn off Vlad Hybernate types banner

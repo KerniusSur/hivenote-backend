@@ -2,7 +2,7 @@ version: '3'
 
 services:
   hivenote-db:
-    image: postgres:16
+    image: postgres:latest
     restart: always
     container_name: hivenote-db
     hostname: postgres

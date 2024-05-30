@@ -7,6 +7,6 @@ public enum ComponentType {
   checklist,
   image,
   link,
-  linkTool
-
+  linkTool,
+  raw
 }

@@ -13,6 +13,7 @@ import com.hivenote.backend.auth.mapper.AuthMapper;
 import com.hivenote.backend.validation.ValidationService;
 import com.hivenote.backend.validation.entity.ValidationType;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
 import java.util.UUID;
 import org.slf4j.Logger;
@@ -39,7 +40,7 @@ public class AuthController {
   }
 
   @PostMapping("/login")
-  public void login(@RequestBody EmailPasswordLoginRequest request, HttpServletResponse response) {
+  public void login(@Valid @RequestBody EmailPasswordLoginRequest request, HttpServletResponse response) {
     LOGGER.info("Login request: email = [{}]", request.getEmail());
     authService.login(request, response);
   }
@@ -50,7 +51,7 @@ public class AuthController {
   }
 
   @PostMapping("/register")
-  public void register(@RequestBody RegisterRequest request, HttpServletResponse response) {
+  public void register(@Valid @RequestBody RegisterRequest request, HttpServletResponse response) {
     LOGGER.info("Register request: email = [{}]", request.getEmail());
     authService.register(request, response);
   }
@@ -72,7 +73,7 @@ public class AuthController {
 
   @PutMapping("/password/change")
   public void changePassword(
-          @RequestBody UpdatePasswordRequest request, AuthenticatedProfile profile) {
+          @Valid @RequestBody UpdatePasswordRequest request, AuthenticatedProfile profile) {
     LOGGER.info("Change password request: account id = [{}]", profile.getId());
     //    authService.changePassword(request, profile.getId());
   }
