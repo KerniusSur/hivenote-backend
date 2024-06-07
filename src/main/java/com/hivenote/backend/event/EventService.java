@@ -67,6 +67,10 @@ public class EventService {
   public EventEntity update(EventUpdateRequest request, UUID accountId) {
     EventEntity entity = findById(request.getId());
 
+    if (request.getEventStart().isAfter(request.getEventEnd())) {
+      throw ApiException.bad(ERROR_PREFIX + "invalidDates");
+    }
+
     if (!entity.getCreatedBy().getId().equals(accountId)) {
       throw ApiException.unauthorized(ERROR_PREFIX + "unauthorized");
     }
