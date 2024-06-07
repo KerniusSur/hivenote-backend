@@ -7,9 +7,6 @@ spring:
     restart:
       enabled: false
 
-app:
-  BASE_URL: https://hivenote.xyz
-
 socket:
   server:
     host: hivenote-backend

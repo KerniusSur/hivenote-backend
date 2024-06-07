@@ -9,8 +9,6 @@ import lombok.*;
 @ToString
 @EqualsAndHashCode
 public class FileUploadResponse {
-    private Integer success; // 1 for success, 0 for failure
-    private FileUrlResponse file;
+  private Integer success; // 1 for success, 0 for failure
+  private FileUrlResponse file;
 }
-
-

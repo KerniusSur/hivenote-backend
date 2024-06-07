@@ -9,5 +9,5 @@ import lombok.*;
 @ToString
 @EqualsAndHashCode
 public class FileUrlResponse {
-    private String url;
+  private String url;
 }
