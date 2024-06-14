@@ -2,6 +2,7 @@ package com.hivenote.backend.note.entity;
 
 import com.hivenote.backend.comment.entity.CommentEntity;
 import com.hivenote.backend.component.entity.ComponentEntity;
+import com.hivenote.backend.event.entity.EventToNoteEntity;
 import jakarta.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -31,7 +32,11 @@ public class NoteEntity {
       orphanRemoval = true)
   private List<ComponentEntity> components;
 
-  @OneToMany(mappedBy = "note", cascade = CascadeType.ALL, orphanRemoval = true)
+  @OneToMany(
+      mappedBy = "note",
+      cascade = CascadeType.ALL,
+      orphanRemoval = true,
+      fetch = FetchType.EAGER)
   private List<NoteAccessEntity> accountAccess = new ArrayList<>();
 
   @OneToMany(
@@ -40,6 +45,9 @@ public class NoteEntity {
       orphanRemoval = true,
       fetch = FetchType.EAGER)
   private List<CommentEntity> comments;
+
+  @OneToMany(mappedBy = "note", cascade = CascadeType.ALL, orphanRemoval = true)
+  private List<EventToNoteEntity> events;
 
   @ManyToOne
   @JoinColumn(name = "parent_id", referencedColumnName = "id")
@@ -127,6 +135,15 @@ public class NoteEntity {
 
   public NoteEntity setComments(List<CommentEntity> comments) {
     this.comments = comments;
+    return this;
+  }
+
+  public List<EventToNoteEntity> getEvents() {
+    return events;
+  }
+
+  public NoteEntity setEvents(List<EventToNoteEntity> events) {
+    this.events = events;
     return this;
   }
 

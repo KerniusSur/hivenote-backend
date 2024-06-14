@@ -1,8 +1,9 @@
 package com.hivenote.backend.note.dto.response;
 
-import lombok.*;
-
+import jakarta.validation.constraints.NotNull;
+import java.util.List;
 import java.util.UUID;
+import lombok.*;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -11,6 +12,7 @@ import java.util.UUID;
 @ToString
 @EqualsAndHashCode
 public class NoteMinResponse {
-    private UUID id;
-    private String title;
+  @NotNull private UUID id;
+  @NotNull private String title;
+  @NotNull private List<NoteAccessResponse> collaborators;
 }

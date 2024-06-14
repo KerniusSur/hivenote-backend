@@ -13,17 +13,12 @@ import com.hivenote.backend.validation.entity.ValidationType;
 import jakarta.transaction.Transactional;
 import java.time.ZonedDateTime;
 import java.util.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Transactional
 @Service
 public class AccountService {
-
-  private static final Logger LOGGER = LoggerFactory.getLogger(AccountService.class);
-  private static final String ERROR_PREFIX = "err.account.";
   private final RoleService roleService;
   private final AccountRepository repository;
   private final PasswordEncoder encoder;
@@ -47,27 +42,18 @@ public class AccountService {
   public AccountEntity findById(UUID id) throws ApiException {
     return repository
         .findById(id)
-        .orElseThrow(() -> ApiException.notFound("err.account.dont.exist"));
+        .orElseThrow(() -> ApiException.notFound("Account was not found"));
   }
 
   public AccountEntity findByIdOrNull(UUID id) {
     return repository.findById(id).orElse(null);
   }
 
-  public Boolean existsById(UUID id) {
-    return repository.existsById(id);
-  }
-
-  public AccountEntity findByPasswordResetToken(String token) throws ApiException {
-    return repository
-        .findByPasswordResetToken(token)
-        .orElseThrow(() -> ApiException.notFound("err.account.dont.exist"));
-  }
-
   public AccountEntity findByEmail(String email) throws ApiException {
     return repository
         .findByEmail(email)
-        .orElseThrow(() -> ApiException.notFound("err.account.dont.exist"));
+        .orElseThrow(
+            () -> ApiException.notFound("Account with email " + email + " does not exist"));
   }
 
   public AccountEntity findByEmailOrNull(String email) {
@@ -79,7 +65,7 @@ public class AccountService {
     Optional<AccountEntity> byEmail = repository.findByEmail(email);
 
     if (byEmail.isPresent()) {
-      throw ApiException.bad(ERROR_PREFIX + "exists");
+      throw ApiException.bad("Account with email " + email + " already exists");
     }
 
     AccountEntity account =
@@ -93,7 +79,7 @@ public class AccountService {
     for (UUID id : request.getRoles()) {
       Optional<RoleEntity> role = roleService.findById(id);
       if (role.isEmpty()) {
-        throw ApiException.bad("err.role.dont.exist");
+        throw ApiException.bad("Role does not exist");
       }
       RoleEntity roleEntity = role.get();
       AccountRoleEntity accountRoleEntity =
@@ -113,7 +99,7 @@ public class AccountService {
     Optional<AccountEntity> byEmail = repository.findByEmail(email);
 
     if (byEmail.isPresent()) {
-      throw ApiException.bad(ERROR_PREFIX + "exists");
+      throw ApiException.bad("Account with email " + email + " already exists");
     }
 
     AccountEntity account =
@@ -141,7 +127,7 @@ public class AccountService {
   public AccountEntity update(AccountUpdateRequest request) {
     AccountEntity account = findById(request.getId());
     if (account == null) {
-      throw ApiException.bad(ERROR_PREFIX + "dont.exist");
+      throw ApiException.bad("Account does not exist");
     }
 
     List<UUID> roleIdList = new ArrayList<>();
@@ -153,7 +139,7 @@ public class AccountService {
     for (UUID id : request.getRoles()) {
       Optional<RoleEntity> role = roleService.findById(id);
       if (role.isEmpty()) {
-        throw ApiException.bad("err.role.dont.exist");
+        throw ApiException.bad("Role does not exist");
       }
       RoleEntity roleEntity = role.get();
       if (roleIdList.contains(roleEntity.getId())) {
@@ -182,7 +168,7 @@ public class AccountService {
   public void updatePassword(String newPassword, UUID id) {
     AccountEntity account = findById(id);
     if (account == null) {
-      throw ApiException.bad(ERROR_PREFIX + "dont.exist");
+      throw ApiException.bad("Account does not exist");
     }
     account.setPassword(encoder.encode(newPassword));
     repository.save(account);
@@ -191,7 +177,7 @@ public class AccountService {
   public void delete(UUID id) {
     AccountEntity account = findById(id);
     if (account == null) {
-      throw ApiException.bad(ERROR_PREFIX + "dont.exist");
+      throw ApiException.bad("Account does not exist");
     }
     repository.delete(account);
   }

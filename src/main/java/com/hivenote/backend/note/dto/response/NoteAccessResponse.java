@@ -1,6 +1,8 @@
 package com.hivenote.backend.note.dto.response;
 
+import com.hivenote.backend.account.dto.response.AccountPublicResponse;
 import com.hivenote.backend.note.entity.NoteAccessType;
+import jakarta.validation.constraints.NotNull;
 import java.util.UUID;
 import lombok.*;
 
@@ -11,8 +13,7 @@ import lombok.*;
 @ToString
 @EqualsAndHashCode
 public class NoteAccessResponse {
-  private UUID noteId;
-  private UUID accountId;
-  private NoteAccessType accessType;
-  private String accountEmail;
+  @NotNull private UUID noteId;
+  @NotNull private AccountPublicResponse account;
+  @NotNull private NoteAccessType accessType;
 }

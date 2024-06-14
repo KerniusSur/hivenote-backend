@@ -18,8 +18,6 @@ import java.util.UUID;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
-// TODO: add note validations and error handling (note size, )
-
 @Slf4j
 @Component
 public class SocketModule {

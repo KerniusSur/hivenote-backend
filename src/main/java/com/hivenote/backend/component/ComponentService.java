@@ -31,11 +31,7 @@ public class ComponentService {
   public ComponentEntity findById(UUID id) {
     return componentRepository
         .findById(id)
-        .orElseThrow(() -> ApiException.notFound("Component not found"));
-  }
-
-  public List<ComponentEntity> findAllByNoteId(UUID noteId) {
-    return componentRepository.findAllByNoteId(noteId);
+        .orElseThrow(() -> ApiException.notFound("Component was not found"));
   }
 
   public ComponentEntity create(ComponentCreateRequest request) {
@@ -43,7 +39,7 @@ public class ComponentService {
     NoteEntity note =
         noteRepository
             .findById(UUID.fromString(request.getNoteId()))
-            .orElseThrow(() -> ApiException.notFound("err.note.notFound"));
+            .orElseThrow(() -> ApiException.notFound("The note was not found"));
 
     ComponentEntity entity =
         new ComponentEntity()
@@ -55,7 +51,7 @@ public class ComponentService {
     if (request.getParentId() != null) {
       parent = findById(UUID.fromString(request.getParentId()));
       if (parent.getNote().getId() != entity.getNote().getId()) {
-        throw ApiException.bad("err.component.parent.note.mismatch");
+        throw ApiException.bad("The parent component does not belong to the same note");
       }
 
       entity.setParent(parent);
@@ -68,7 +64,7 @@ public class ComponentService {
     NoteEntity note =
         noteRepository
             .findById(UUID.fromString(message.getId()))
-            .orElseThrow(() -> ApiException.notFound("err.note.notFound"));
+            .orElseThrow(() -> ApiException.notFound("The note was not found"));
 
     AtomicInteger priority = new AtomicInteger(1);
     List<ComponentEntity> components =
@@ -93,7 +89,7 @@ public class ComponentService {
                 .toList());
 
     components.sort(Comparator.comparing(ComponentEntity::getPriority));
-    
+
     return componentRepository.saveAll(components);
   }
 
@@ -104,19 +100,11 @@ public class ComponentService {
     if (request.getParentId() != null) {
       parent = findById(UUID.fromString(request.getParentId()));
       if (parent.getNote().getId() != entity.getNote().getId()) {
-        throw ApiException.bad("err.component.parent.note.mismatch");
+        throw ApiException.bad("The parent component does not belong to the same note");
       }
     }
 
     entity.setType(request.getType()).setProperties(request.getProperties()).setParent(parent);
     return componentRepository.save(entity);
-  }
-
-  public void delete(UUID id) {
-    componentRepository.deleteById(id);
-  }
-
-  public void deleteAllByIds(List<UUID> ids) {
-    componentRepository.deleteAllById(ids);
   }
 }

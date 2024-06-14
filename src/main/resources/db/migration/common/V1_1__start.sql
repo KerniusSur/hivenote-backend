@@ -97,6 +97,18 @@ CREATE TABLE event
     FOREIGN KEY (account_id) REFERENCES account (id)
 );
 
+-- EVENT_TO_NOTE TABLE
+CREATE TABLE event_to_note
+(
+    id       uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+    event_id uuid NOT NULL,
+    note_id  uuid NOT NULL,
+    "order"  int,
+
+    FOREIGN KEY (event_id) REFERENCES event (id),
+    FOREIGN KEY (note_id) REFERENCES note (id)
+);
+
 -- COMMENT TABLE
 CREATE TABLE comment
 (
