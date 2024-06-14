@@ -6,6 +6,7 @@ import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
@@ -13,8 +14,9 @@ import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.textract.TextractClient;
 
-@Configuration
 @Getter
+@Configuration
+@ConditionalOnProperty(value = "aws.isDisabled", havingValue = "false", matchIfMissing = true)
 public class AWSClientConfig {
   private final Region region = Region.EU_CENTRAL_1;
 
@@ -30,6 +32,9 @@ public class AWSClientConfig {
   @Bean
   public AmazonS3 amazonS3() {
     BasicAWSCredentials awsCredentials = new BasicAWSCredentials(accessKey, secretAccessKey);
+    if ((accessKey.equals("null") || secretAccessKey.equals("null"))) {
+      throw new RuntimeException("AWS credentials are not set");
+    }
 
     return AmazonS3ClientBuilder.standard()
         .withCredentials(new AWSStaticCredentialsProvider(awsCredentials))
@@ -39,6 +44,10 @@ public class AWSClientConfig {
 
   @Bean
   public TextractClient textractClient() {
+    if ((accessKey.equals("null") || secretAccessKey.equals("null"))) {
+      throw new RuntimeException("AWS credentials are not set");
+    }
+
     return TextractClient.builder()
         .credentialsProvider(
             StaticCredentialsProvider.create(

@@ -1,10 +1,12 @@
 package com.hivenote.backend.note.mapper;
 
-import com.hivenote.backend.account.dto.response.AccountPublicResponse;
 import com.hivenote.backend.account.mapper.AccountMapper;
 import com.hivenote.backend.comment.mapper.CommentMapper;
 import com.hivenote.backend.component.mapper.ComponentMapper;
+import com.hivenote.backend.event.entity.EventToNoteEntity;
+import com.hivenote.backend.event.mapper.EventMapper;
 import com.hivenote.backend.note.dto.response.NoteAccessResponse;
+import com.hivenote.backend.note.dto.response.NoteMinResponse;
 import com.hivenote.backend.note.dto.response.NoteResponse;
 import com.hivenote.backend.note.entity.NoteAccessEntity;
 import com.hivenote.backend.note.entity.NoteEntity;
@@ -39,13 +41,16 @@ public class NoteMapper {
       response.setChildren(ListUtil.map(note.getChildren(), NoteMapper::toResponse));
     }
 
-    return response;
-  }
+    if (note.getEvents() != null) {
+      response.setEvents(
+          ListUtil.map(
+              note.getEvents().stream()
+                  .map((EventToNoteEntity::getEvent))
+                  .collect(Collectors.toList()),
+              EventMapper::toResponse));
+    }
 
-  public static List<AccountPublicResponse> toCollaboratorResponse(NoteEntity note) {
-    return note.getAccountAccess().stream()
-        .map(noteAccessEntity -> AccountMapper.toPublicResponse(noteAccessEntity.getAccount()))
-        .collect(Collectors.toList());
+    return response;
   }
 
   public static NoteMessage toMessage(NoteEntity note) {
@@ -64,7 +69,18 @@ public class NoteMapper {
   public static NoteAccessResponse toNoteAccessResponse(NoteAccessEntity noteAccessEntity) {
     return new NoteAccessResponse()
         .setNoteId(noteAccessEntity.getNote().getId())
-        .setAccountId(noteAccessEntity.getAccount().getId())
+        .setAccount(AccountMapper.toPublicResponse(noteAccessEntity.getAccount()))
         .setAccessType(noteAccessEntity.getAccessType());
+  }
+
+  public static List<NoteAccessResponse> toCollaboratorResponse(NoteEntity note) {
+    return ListUtil.map(note.getAccountAccess(), NoteMapper::toNoteAccessResponse);
+  }
+
+  public static NoteMinResponse toMinResponse(NoteEntity note) {
+    return new NoteMinResponse()
+        .setId(note.getId())
+        .setTitle(note.getTitle())
+        .setCollaborators(toCollaboratorResponse(note));
   }
 }

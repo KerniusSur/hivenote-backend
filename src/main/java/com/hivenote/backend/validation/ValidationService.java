@@ -17,7 +17,7 @@ public class ValidationService {
 
   public ValidationEntity findBy(String validationValue, String value) {
     if (!existsBy(validationValue, value)) {
-      throw ApiException.notFound("err.validation.notFound")
+      throw ApiException.notFound("Validation was not found")
           .addLabel("validationValue", validationValue)
           .addLabel("value", value);
     }

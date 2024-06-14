@@ -34,15 +34,14 @@ management:
     web:
       base-path: /api/v1/public
 app:
-  file:
-    upload-dir: classpath:file/uploads
   jwt:
     secret: ${JWT_SECRET:Am@z11nGS3eEcR4tBBDcbb}
     expirationMs: 172800000 # 2 days
 aws:
-  accessKey: ${AWS_ACCESS_KEY}
-  secretAccessKey: ${AWS_SECRET_ACCESS_KEY}
-  bucketName: ${AWS_BUCKET_NAME}
+  accessKey: ${AWS_ACCESS_KEY:null}
+  secretAccessKey: ${AWS_SECRET_ACCESS_KEY:null}
+  bucketName: ${AWS_BUCKET_NAME:null}
+  isDisabled: ${AWS_DISABLED:true}
 socket:
   server:
     host: localhost

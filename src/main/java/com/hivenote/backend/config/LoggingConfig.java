@@ -12,6 +12,7 @@ import org.zalando.logbook.json.JsonHttpLogFormatter;
 
 @Configuration
 public class LoggingConfig {
+
   @Bean
   public Logbook logbook(Sink sink) {
     return Logbook.builder().sink(sink).build();

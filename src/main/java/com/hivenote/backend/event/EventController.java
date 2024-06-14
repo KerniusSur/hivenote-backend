@@ -1,10 +1,10 @@
 package com.hivenote.backend.event;
 
 import com.hivenote.backend.auth.entity.AuthenticatedProfile;
-import com.hivenote.backend.event.entity.EventEntity;
 import com.hivenote.backend.event.dto.request.EventCreateRequest;
 import com.hivenote.backend.event.dto.request.EventUpdateRequest;
 import com.hivenote.backend.event.dto.response.EventResponse;
+import com.hivenote.backend.event.entity.EventEntity;
 import com.hivenote.backend.event.mapper.EventMapper;
 import com.hivenote.backend.utils.ListUtil;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -40,9 +40,11 @@ public class EventController {
 
   @GetMapping("/filter")
   public List<EventResponse> findAllUserEventsFilteredBy(
-      @RequestParam(required = false, name = "dateFrom") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+      @RequestParam(required = false, name = "dateFrom")
+          @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
           ZonedDateTime dateFrom,
-      @RequestParam(required = false, name = "dateTo") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+      @RequestParam(required = false, name = "dateTo")
+          @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
           ZonedDateTime dateTo,
       @RequestParam(required = false, name = "searchString") String searchString,
       AuthenticatedProfile profile) {
@@ -69,5 +71,11 @@ public class EventController {
   @DeleteMapping("/{id}")
   public void delete(@PathVariable String id, AuthenticatedProfile profile) {
     eventService.delete(UUID.fromString(id), profile.getId());
+  }
+
+  @PutMapping("/{id}/link/note/{noteId}")
+  public void linkToNote(
+      @PathVariable String id, @PathVariable String noteId, AuthenticatedProfile profile) {
+    eventService.linkToNote(UUID.fromString(id), UUID.fromString(noteId), profile.getId(), null);
   }
 }

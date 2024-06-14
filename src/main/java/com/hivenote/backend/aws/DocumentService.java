@@ -10,11 +10,15 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.util.Objects;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+@Slf4j
 @Service
+@ConditionalOnProperty(value = "aws.isDisabled", havingValue = "false", matchIfMissing = true)
 public class DocumentService {
   private final AmazonS3 amazonS3;
   private final AWSClientConfig awsClientConfig;
@@ -38,7 +42,10 @@ public class DocumentService {
 
       String url = amazonS3.getUrl(bucketName, file.getOriginalFilename()).toString();
       FileUrlResponse fileUrlResponse = new FileUrlResponse(url);
-      localFile.delete();
+      boolean isDeleted = localFile.delete();
+      if (!isDeleted) {
+        log.error("Failed to delete file: {}", localFile.getName());
+      }
 
       return new FileUploadResponse(1, fileUrlResponse);
     } catch (Exception e) {

@@ -1,6 +1,7 @@
-package com.hivenote.backend.note;
+package com.hivenote.backend.note.controller;
 
 import com.hivenote.backend.auth.entity.AuthenticatedProfile;
+import com.hivenote.backend.note.NoteService;
 import com.hivenote.backend.note.dto.request.NoteShareRequest;
 import com.hivenote.backend.note.dto.response.NoteAccessResponse;
 import com.hivenote.backend.note.entity.NoteAccessType;

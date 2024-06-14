@@ -3,6 +3,7 @@ package com.hivenote.backend.event.entity;
 import com.hivenote.backend.account.entity.AccountEntity;
 import jakarta.persistence.*;
 import java.time.ZonedDateTime;
+import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -27,6 +28,9 @@ public class EventEntity {
   @ManyToOne
   @JoinColumn(name = "account_id", referencedColumnName = "id")
   private AccountEntity createdBy;
+
+  @OneToMany(mappedBy = "event", cascade = CascadeType.ALL, orphanRemoval = true)
+  private List<EventToNoteEntity> notes;
 
   public UUID getId() {
     return id;
@@ -91,6 +95,15 @@ public class EventEntity {
     return this;
   }
 
+  public List<EventToNoteEntity> getNotes() {
+    return notes;
+  }
+
+  public EventEntity setNotes(List<EventToNoteEntity> notes) {
+    this.notes = notes;
+    return this;
+  }
+
   @Override
   public boolean equals(Object o) {
     if (this == o) return true;
@@ -102,7 +115,8 @@ public class EventEntity {
         && getLocation().equals(that.getLocation())
         && getEventStart().equals(that.getEventStart())
         && getEventEnd().equals(that.getEventEnd())
-        && getCreatedBy().equals(that.getCreatedBy());
+        && getCreatedBy().equals(that.getCreatedBy())
+        && getNotes().equals(that.getNotes());
   }
 
   @Override
@@ -114,6 +128,7 @@ public class EventEntity {
         getLocation(),
         getEventStart(),
         getEventEnd(),
-        getCreatedBy());
+        getCreatedBy(),
+        getNotes());
   }
 }

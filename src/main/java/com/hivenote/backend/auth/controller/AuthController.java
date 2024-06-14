@@ -40,7 +40,8 @@ public class AuthController {
   }
 
   @PostMapping("/login")
-  public void login(@Valid @RequestBody EmailPasswordLoginRequest request, HttpServletResponse response) {
+  public void login(
+      @Valid @RequestBody EmailPasswordLoginRequest request, HttpServletResponse response) {
     LOGGER.info("Login request: email = [{}]", request.getEmail());
     authService.login(request, response);
   }
@@ -58,7 +59,7 @@ public class AuthController {
 
   @PutMapping("/register/confirm")
   public void registerConfirmation(
-          @RequestBody RegisterConfirmationRequest request, AuthenticatedProfile profile) {
+      @RequestBody RegisterConfirmationRequest request, AuthenticatedProfile profile) {
     LOGGER.info("Register confirmation request account id = [{}]", profile.getId());
     //    authService.confirmRegister(request, profile.getId());
   }
@@ -73,7 +74,7 @@ public class AuthController {
 
   @PutMapping("/password/change")
   public void changePassword(
-          @Valid @RequestBody UpdatePasswordRequest request, AuthenticatedProfile profile) {
+      @Valid @RequestBody UpdatePasswordRequest request, AuthenticatedProfile profile) {
     LOGGER.info("Change password request: account id = [{}]", profile.getId());
     //    authService.changePassword(request, profile.getId());
   }
