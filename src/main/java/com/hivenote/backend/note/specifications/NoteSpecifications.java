@@ -19,6 +19,17 @@ public class NoteSpecifications {
     return (root, query, cb) -> cb.equal(root.join("accountAccess").get("accessType"), accessType);
   }
 
+  public static Specification<NoteEntity> hasEitherAccessType(
+      NoteAccessType accessType, NoteAccessType accessType2) {
+    return (root, query, cb) -> {
+      Predicate accessTypePredicate =
+          cb.equal(root.join("accountAccess").get("accessType"), accessType);
+      Predicate accessType2Predicate =
+          cb.equal(root.join("accountAccess").get("accessType"), accessType2);
+      return cb.or(accessTypePredicate, accessType2Predicate);
+    };
+  }
+
   public static Specification<NoteEntity> containsSearchString(String searchString) {
     return (root, query, criteriaBuilder) -> {
       Predicate notesTitlePredicate =
@@ -62,6 +73,7 @@ public class NoteSpecifications {
   public static List<Specification<NoteEntity>> getSpecifications(
       UUID accountId,
       NoteAccessType accessType,
+      NoteAccessType accessType2,
       String searchString,
       Boolean isArchived,
       Boolean isDeleted) {
@@ -71,8 +83,16 @@ public class NoteSpecifications {
       specifications.add(hasAccountId(accountId));
     }
 
-    if (accessType != null) {
+    if (accessType != null && accessType2 != null) {
+      specifications.add(hasEitherAccessType(accessType, accessType2));
+    } else if (accessType != null) {
       specifications.add(hasAccessType(accessType));
+    } else if (accessType2 != null) {
+      specifications.add(hasAccessType(accessType2));
+    }
+
+    if (accessType2 != null) {
+      specifications.add(hasAccessType(accessType2));
     }
 
     if (searchString != null) {
