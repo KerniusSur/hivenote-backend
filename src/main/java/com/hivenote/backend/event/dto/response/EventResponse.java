@@ -21,6 +21,6 @@ public class EventResponse {
   private String location;
   @NotNull private ZonedDateTime eventStart;
   @NotNull private ZonedDateTime eventEnd;
-  private List<NoteMinResponse> notes;
+  @NotNull private List<NoteMinResponse> notes;
   @NotNull private AccountPublicResponse createdBy;
 }
