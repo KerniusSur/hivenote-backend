@@ -73,6 +73,11 @@ public class NoteSpecifications {
 
     if (accessType != null) {
       specifications.add(hasAccessType(accessType));
+<<<<<<< Updated upstream
+=======
+    } else if (accessType2 != null) {
+      specifications.add(hasAccessType(accessType2));
+>>>>>>> Stashed changes
     }
 
     if (searchString != null) {

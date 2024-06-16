@@ -68,6 +68,19 @@ public class EventService {
             .setEventEnd(request.getEventEnd())
             .setCreatedBy(new AccountEntity().setId(accountId));
 
+    if (request.getNoteIds() != null) {
+      List<EventToNoteEntity> links =
+          request.getNoteIds().stream()
+              .map(
+                  noteId ->
+                      new EventToNoteEntity()
+                          .setEvent(entity)
+                          .setNote(noteService.findById(noteId)))
+              .toList();
+
+      entity.setNotes(links);
+    }
+
     return eventRepository.save(entity);
   }
 
@@ -88,6 +101,19 @@ public class EventService {
         .setLocation(request.getLocation())
         .setEventStart(request.getEventStart())
         .setEventEnd(request.getEventEnd());
+
+    if (request.getNoteIds() != null) {
+      List<EventToNoteEntity> links =
+          request.getNoteIds().stream()
+              .map(
+                  noteId ->
+                      new EventToNoteEntity()
+                          .setEvent(entity)
+                          .setNote(noteService.findById(noteId)))
+              .toList();
+
+      entity.setNotes(links);
+    }
 
     return eventRepository.save(entity);
   }
