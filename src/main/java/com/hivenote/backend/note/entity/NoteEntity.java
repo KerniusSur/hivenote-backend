@@ -6,6 +6,7 @@ import com.hivenote.backend.event.entity.EventToNoteEntity;
 import jakarta.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
@@ -30,7 +31,7 @@ public class NoteEntity {
       cascade = CascadeType.ALL,
       fetch = FetchType.EAGER,
       orphanRemoval = true)
-  private List<ComponentEntity> components;
+  private List<ComponentEntity> components = new ArrayList<>();
 
   @OneToMany(
       mappedBy = "note",
@@ -163,5 +164,39 @@ public class NoteEntity {
   public NoteEntity setChildren(List<NoteEntity> children) {
     this.children = children;
     return this;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+    NoteEntity that = (NoteEntity) o;
+    return getId().equals(that.getId())
+        && Objects.equals(getTitle(), that.getTitle())
+        && Objects.equals(getCoverUrl(), that.getCoverUrl())
+        && getIsArchived().equals(that.getIsArchived())
+        && getIsDeleted().equals(that.getIsDeleted())
+        && getComponents().equals(that.getComponents())
+        && getAccountAccess().equals(that.getAccountAccess())
+        && getComments().equals(that.getComments())
+        && getEvents().equals(that.getEvents())
+        && Objects.equals(getParent(), that.getParent())
+        && getChildren().equals(that.getChildren());
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(
+        getId(),
+        getTitle(),
+        getCoverUrl(),
+        getIsArchived(),
+        getIsDeleted(),
+        getComponents(),
+        getAccountAccess(),
+        getComments(),
+        getEvents(),
+        getParent(),
+        getChildren());
   }
 }

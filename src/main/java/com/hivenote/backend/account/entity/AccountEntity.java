@@ -7,6 +7,7 @@ import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 @Entity(name = "account")
@@ -37,7 +38,7 @@ public class AccountEntity {
   private List<NoteAccessEntity> noteAccess = new ArrayList<>();
 
   @OneToMany(cascade = CascadeType.ALL, mappedBy = "account", orphanRemoval = true)
-  private List<CommentEntity> comments;
+  private List<CommentEntity> comments = new ArrayList<>();
 
   public UUID getId() {
     return id;
@@ -146,5 +147,41 @@ public class AccountEntity {
   public AccountEntity setComments(List<CommentEntity> comments) {
     this.comments = comments;
     return this;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+    AccountEntity that = (AccountEntity) o;
+    return getId().equals(that.getId())
+        && getEmail().equals(that.getEmail())
+        && getName().equals(that.getName())
+        && getLastName().equals(that.getLastName())
+        && getPassword().equals(that.getPassword())
+        && getPhoneNumber().equals(that.getPhoneNumber())
+        && getLastLogin().equals(that.getLastLogin())
+        && getPasswordResetToken().equals(that.getPasswordResetToken())
+        && getPasswordResetTokenExpirationDate().equals(that.getPasswordResetTokenExpirationDate())
+        && getRoles().equals(that.getRoles())
+        && getNoteAccess().equals(that.getNoteAccess())
+        && getComments().equals(that.getComments());
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(
+        getId(),
+        getEmail(),
+        getName(),
+        getLastName(),
+        getPassword(),
+        getPhoneNumber(),
+        getLastLogin(),
+        getPasswordResetToken(),
+        getPasswordResetTokenExpirationDate(),
+        getRoles(),
+        getNoteAccess(),
+        getComments());
   }
 }

@@ -2,6 +2,7 @@ package com.hivenote.backend.component.entity;
 
 import com.hivenote.backend.note.entity.NoteEntity;
 import jakarta.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
@@ -33,7 +34,7 @@ public class ComponentEntity {
 
   // TODO: removed orphanRemoval = true, add if needed
   @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL)
-  private List<ComponentEntity> children;
+  private List<ComponentEntity> children = new ArrayList<>();
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "note_id", referencedColumnName = "id")

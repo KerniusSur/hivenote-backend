@@ -1,18 +1,18 @@
 -- Role TABLE
 CREATE TABLE IF NOT EXISTS role
 (
-    id   uuid PRIMARY KEY DEFAULT gen_random_uuid(),
-    name text NOT NULL
+    id     uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+    "name" text NOT NULL
 );
 
 -- ACCOUNT TABLE
 CREATE TABLE IF NOT EXISTS account
 (
     id                                   uuid PRIMARY KEY DEFAULT gen_random_uuid(),
-    name                                 text,
+    "name"                               text,
     last_name                            text,
     email                                text UNIQUE NOT NULL,
-    password                             text,
+    "password"                           text,
     phone_number                         text,
     last_login                           timestamp,
     password_reset_token                 text,
@@ -35,7 +35,7 @@ CREATE TABLE IF NOT EXISTS account_role
 CREATE TABLE IF NOT EXISTS validation
 (
     id                uuid PRIMARY KEY DEFAULT gen_random_uuid(),
-    type              TEXT    NOT NULL,
+    "type"            TEXT    NOT NULL,
     validation_value  TEXT    NOT NULL,
     value_to_validate TEXT    NOT NULL,
     used              BOOLEAN NOT NULL DEFAULT FALSE,
@@ -73,7 +73,7 @@ CREATE TABLE note_access
 CREATE TABLE component
 (
     id         uuid PRIMARY KEY DEFAULT gen_random_uuid(),
-    type       text  NOT NULL,
+    "type"     text  NOT NULL,
     priority   int   NOT NULL,
     properties jsonb NOT NULL,
     parent_id  uuid,
@@ -89,7 +89,7 @@ CREATE TABLE event
     id          uuid PRIMARY KEY DEFAULT gen_random_uuid(),
     title       text,
     description text,
-    location    text,
+    "location"  text,
     event_start timestamp with time zone,
     event_end   timestamp with time zone,
     account_id  uuid,
@@ -103,7 +103,6 @@ CREATE TABLE event_to_note
     id       uuid PRIMARY KEY DEFAULT gen_random_uuid(),
     event_id uuid NOT NULL,
     note_id  uuid NOT NULL,
-    "order"  int,
 
     FOREIGN KEY (event_id) REFERENCES event (id),
     FOREIGN KEY (note_id) REFERENCES note (id)

@@ -2,6 +2,7 @@ package com.hivenote.backend.event.entity;
 
 import com.hivenote.backend.note.entity.NoteEntity;
 import jakarta.persistence.*;
+import java.util.Objects;
 import java.util.UUID;
 
 @Entity
@@ -18,8 +19,6 @@ public class EventToNoteEntity {
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "note_id", referencedColumnName = "id")
   private NoteEntity note;
-
-  private int order;
 
   public UUID getId() {
     return id;
@@ -48,12 +47,18 @@ public class EventToNoteEntity {
     return this;
   }
 
-  public int getOrder() {
-    return order;
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+    EventToNoteEntity that = (EventToNoteEntity) o;
+    return getId().equals(that.getId())
+        && getEvent().equals(that.getEvent())
+        && getNote().equals(that.getNote());
   }
 
-  public EventToNoteEntity setOrder(int order) {
-    this.order = order;
-    return this;
+  @Override
+  public int hashCode() {
+    return Objects.hash(getId(), getEvent(), getNote());
   }
 }

@@ -91,10 +91,6 @@ public class NoteSpecifications {
       specifications.add(hasAccessType(accessType2));
     }
 
-    if (accessType2 != null) {
-      specifications.add(hasAccessType(accessType2));
-    }
-
     if (searchString != null) {
       specifications.add(containsSearchString(searchString));
     }
