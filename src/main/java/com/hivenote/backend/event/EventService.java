@@ -13,10 +13,13 @@ import com.hivenote.backend.note.entity.NoteEntity;
 import com.hivenote.backend.utils.SpecificationUtil;
 import io.micrometer.common.lang.Nullable;
 import java.time.ZonedDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+@Slf4j
 @Service
 public class EventService {
   private final EventRepository eventRepository;
@@ -68,15 +71,18 @@ public class EventService {
             .setEventEnd(request.getEventEnd())
             .setCreatedBy(new AccountEntity().setId(accountId));
 
+    EventEntity savedEntity = eventRepository.save(entity);
+
     if (request.getNoteIds() != null) {
       List<EventToNoteEntity> links =
-          request.getNoteIds().stream()
-              .map(
-                  noteId ->
-                      new EventToNoteEntity()
-                          .setEvent(entity)
-                          .setNote(noteService.findById(noteId)))
-              .toList();
+          new ArrayList<>(
+              request.getNoteIds().stream()
+                  .map(
+                      noteId ->
+                          new EventToNoteEntity()
+                              .setEvent(savedEntity)
+                              .setNote(noteService.findById(noteId)))
+                  .toList());
 
       entity.setNotes(links);
     }
@@ -95,6 +101,43 @@ public class EventService {
       throw ApiException.unauthorized("You are not authorized to update this event");
     }
 
+    List<UUID> newNoteIds = new ArrayList<>();
+    List<UUID> removedNoteIds = new ArrayList<>();
+
+    if (request.getNoteIds() != null) {
+      //      newNoteIds =
+      //          request.getNoteIds().stream()
+      //              .filter(
+      //                  (noteId) ->
+      //                      entity.getNotes().stream()
+      //                          .noneMatch((eventToNote) ->
+      // eventToNote.getNote().getId().equals(noteId)))
+      //              .toList();
+      request
+          .getNoteIds()
+          .forEach(
+              noteId -> {
+                if (entity.getNotes().stream()
+                    .noneMatch((eventToNote) -> eventToNote.getNote().getId().equals(noteId))) {
+                  newNoteIds.add(noteId);
+                }
+              });
+
+      entity
+          .getNotes()
+          .forEach(
+              eventToNote -> {
+                if (request.getNoteIds().stream()
+                    .noneMatch((noteId) -> eventToNote.getNote().getId().equals(noteId))) {
+                  removedNoteIds.add(eventToNote.getNote().getId());
+                }
+              });
+
+      if (newNoteIds.size() > 5) {
+        throw ApiException.bad("An event can only be linked to a maximum of 5 notes");
+      }
+    }
+
     entity
         .setTitle(request.getTitle())
         .setDescription(request.getDescription())
@@ -104,15 +147,19 @@ public class EventService {
 
     if (request.getNoteIds() != null) {
       List<EventToNoteEntity> links =
-          request.getNoteIds().stream()
-              .map(
-                  noteId ->
-                      new EventToNoteEntity()
-                          .setEvent(entity)
-                          .setNote(noteService.findById(noteId)))
-              .toList();
+          new ArrayList<>(
+              newNoteIds.stream()
+                  .map(
+                      noteId ->
+                          new EventToNoteEntity()
+                              .setEvent(entity)
+                              .setNote(noteService.findById(noteId)))
+                  .toList());
 
-      entity.setNotes(links);
+      entity
+          .getNotes()
+          .removeIf(eventToNote -> removedNoteIds.contains(eventToNote.getNote().getId()));
+      entity.getNotes().addAll(links);
     }
 
     return eventRepository.save(entity);
@@ -144,9 +191,6 @@ public class EventService {
     }
 
     EventToNoteEntity eventToNoteEntity = new EventToNoteEntity().setEvent(event).setNote(note);
-    if (order != null) {
-      eventToNoteEntity.setOrder(order);
-    }
 
     event.getNotes().add(eventToNoteEntity);
 

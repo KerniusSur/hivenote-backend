@@ -14,24 +14,27 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(GlobalExceptionHandler.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<String> handleGenericException(Exception ex) {
-        LOGGER.error("Handling general exception", ex);
-        return new ResponseEntity<>(
-                "err.generalError", HttpStatus.INTERNAL_SERVER_ERROR);
-    }
+  @ExceptionHandler(Exception.class)
+  public ResponseEntity<String> handleGenericException(Exception ex) {
+    LOGGER.error("Handling general exception", ex);
+    return new ResponseEntity<>(
+        "An error occurred while processing the request. Please try again later or contact the server administrators.",
+        HttpStatus.INTERNAL_SERVER_ERROR);
+  }
 
-    @ExceptionHandler(ApiException.class)
-    public ResponseEntity<String> handleApiException(ApiException ex) {
-        LOGGER.error("Handling API exception", ex);
-        return new ResponseEntity<>(ex.getMessage(), ex.getStatus());
-    }
+  @ExceptionHandler(ApiException.class)
+  public ResponseEntity<String> handleApiException(ApiException ex) {
+    LOGGER.error("Handling API exception", ex);
+    return new ResponseEntity<>(ex.getMessage(), ex.getStatus());
+  }
 
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<String> handleValidationException(MethodArgumentNotValidException ex) {
-        LOGGER.error("Handling argument not valid exception", ex);
-        return new ResponseEntity<>("err.badRequest", HttpStatus.BAD_REQUEST);
-    }
+  @ExceptionHandler(MethodArgumentNotValidException.class)
+  public ResponseEntity<String> handleValidationException(MethodArgumentNotValidException ex) {
+    LOGGER.error("Handling argument not valid exception", ex);
+    return new ResponseEntity<>(
+        "An error occurred while processing the request. Please check the request and try again.",
+        HttpStatus.BAD_REQUEST);
+  }
 }

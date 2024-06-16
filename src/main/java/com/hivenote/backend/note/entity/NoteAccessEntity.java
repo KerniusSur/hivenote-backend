@@ -2,6 +2,7 @@ package com.hivenote.backend.note.entity;
 
 import com.hivenote.backend.account.entity.AccountEntity;
 import jakarta.persistence.*;
+import java.util.Objects;
 import java.util.UUID;
 
 @Entity
@@ -56,5 +57,21 @@ public class NoteAccessEntity {
   public NoteAccessEntity setAccessType(NoteAccessType accessType) {
     this.accessType = accessType;
     return this;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+    NoteAccessEntity that = (NoteAccessEntity) o;
+    return getId().equals(that.getId())
+        && getNote().equals(that.getNote())
+        && getAccount().equals(that.getAccount())
+        && getAccessType() == that.getAccessType();
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(getId(), getNote(), getAccount(), getAccessType());
   }
 }
