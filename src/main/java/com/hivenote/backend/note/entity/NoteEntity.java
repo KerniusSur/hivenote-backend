@@ -44,17 +44,17 @@ public class NoteEntity {
       cascade = CascadeType.ALL,
       orphanRemoval = true,
       fetch = FetchType.EAGER)
-  private List<CommentEntity> comments;
+  private List<CommentEntity> comments = new ArrayList<>();
 
   @OneToMany(mappedBy = "note", cascade = CascadeType.ALL, orphanRemoval = true)
-  private List<EventToNoteEntity> events;
+  private List<EventToNoteEntity> events = new ArrayList<>();
 
   @ManyToOne
   @JoinColumn(name = "parent_id", referencedColumnName = "id")
   private NoteEntity parent;
 
   @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL, orphanRemoval = true)
-  private List<NoteEntity> children;
+  private List<NoteEntity> children = new ArrayList<>();
 
   @PrePersist
   public void init() {

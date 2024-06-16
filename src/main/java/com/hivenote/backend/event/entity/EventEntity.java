@@ -3,6 +3,7 @@ package com.hivenote.backend.event.entity;
 import com.hivenote.backend.account.entity.AccountEntity;
 import jakarta.persistence.*;
 import java.time.ZonedDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
@@ -30,7 +31,7 @@ public class EventEntity {
   private AccountEntity createdBy;
 
   @OneToMany(mappedBy = "event", cascade = CascadeType.ALL, orphanRemoval = true)
-  private List<EventToNoteEntity> notes;
+  private List<EventToNoteEntity> notes = new ArrayList<>();
 
   public UUID getId() {
     return id;
