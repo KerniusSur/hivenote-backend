@@ -16,6 +16,8 @@ import com.hivenote.backend.socket.messages.NoteMessage;
 import com.hivenote.backend.utils.SpecificationUtil;
 import io.micrometer.common.lang.Nullable;
 import java.util.*;
+
+import jakarta.validation.constraints.Null;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -45,13 +47,14 @@ public class NoteService {
   public List<NoteEntity> findAllFilteredBy(
       @Nullable UUID accountId,
       @Nullable NoteAccessType accessType,
+      @Nullable NoteAccessType accessType2,
       @Nullable String searchString,
       @Nullable Boolean isArchived,
       @Nullable Boolean isDeleted) {
 
     return noteRepository.findAll(
         SpecificationUtil.toANDSpecification(
-            getSpecifications(accountId, accessType, searchString, isArchived, isDeleted)));
+            getSpecifications(accountId, accessType, accessType2, searchString, isArchived, isDeleted)));
   }
 
   public NoteEntity findByIdAndAccountId(UUID noteId, UUID accountId) {
@@ -64,7 +67,7 @@ public class NoteService {
       NoteAccessType accessType, UUID accountId) {
     return noteRepository.findAll(
         SpecificationUtil.toANDSpecification(
-            getSpecifications(accountId, accessType, null, false, false)));
+            getSpecifications(accountId, accessType, null, null, false, false)));
   }
 
   public void saveFromSocket(NoteMessage noteMessage) {

@@ -52,13 +52,14 @@ public class NoteController {
   @GetMapping("/filter")
   public List<NoteResponse> findAllFilteredBy(
       @RequestParam(required = false, name = "accessType") NoteAccessType accessType,
+      @RequestParam(required = false, name = "accessType2") NoteAccessType accessType2,
       @RequestParam(required = false, name = "searchString") String searchString,
       @RequestParam(required = false, name = "isArchived") Boolean isArchived,
       @RequestParam(required = false, name = "isDeleted") Boolean isDeleted,
       AuthenticatedProfile profile) {
     return ListUtil.map(
         noteService.findAllFilteredBy(
-            profile.getId(), accessType, searchString, isArchived, isDeleted),
+            profile.getId(), accessType, accessType2, searchString, isArchived, isDeleted),
         NoteMapper::toResponse);
   }
 
